@@ -11,7 +11,7 @@ var playerVideo
 
 // keep track of scores
 var playerScore = 0,
-  computerScore = 0
+  remoteScore = 0
 
 // setyp & initialization
 // -----------------------------------------------------------------------------
@@ -64,9 +64,6 @@ function waitForPlayer() {
 }
 
 async function playOneRound() {
-  // show robot waiting for player
-  UI.showRobotImage(true)
-
   // hide the timer circle
   UI.showTimer(false)
   UI.setTimerProgress(0)
@@ -123,11 +120,11 @@ function detectPlayerGesture(requiredDuration) {
           UI.setTimerProgress(1)
           UI.animatePlayerHand()
 
-          // let computer make its move
-          const computerGesture = getRandomGesture()
+          // let remote make its move
+          const remoteGesture = getRandomGesture()
 
           // check the game result
-          checkResult(playerGesture, computerGesture)
+          checkResult(playerGesture, remoteGesture)
         }
       })
     }, 0)
@@ -136,38 +133,38 @@ function detectPlayerGesture(requiredDuration) {
   predictNonblocking()
 }
 
-function checkResult(playerGesture, computerGesture) {
+function checkResult(playerGesture, remoteGesture) {
   let statusText
   let playerWins = false
-  let computerWins = false
+  let remoteWins = false
 
-  if (playerGesture == computerGesture) {
+  if (playerGesture == remoteGesture) {
     // draw
     statusText = "It's a draw!"
   } else {
     // check whinner
     if (playerGesture == 'rock') {
-      if (computerGesture == 'scissors') {
+      if (remoteGesture == 'scissors') {
         playerWins = true
         statusText = 'Rock beats scissors'
       } else {
-        computerWins = true
+        remoteWins = true
         statusText = 'Paper beats rock'
       }
     } else if (playerGesture == 'paper') {
-      if (computerGesture == 'rock') {
+      if (remoteGesture == 'rock') {
         playerWins = true
         statusText = 'Paper beats rock'
       } else {
-        computerWins = true
+        remoteWins = true
         statusText = 'Scissors beat paper'
       }
     } else if (playerGesture == 'scissors') {
-      if (computerGesture == 'paper') {
+      if (remoteGesture == 'paper') {
         playerWins = true
         statusText = 'Scissors beat paper'
       } else {
-        computerWins = true
+        remoteWins = true
         statusText = 'Rock beats scissors'
       }
     }
@@ -176,18 +173,18 @@ function checkResult(playerGesture, computerGesture) {
   if (playerWins) {
     playerScore++
     statusText += ' - You win!'
-  } else if (computerWins) {
-    computerScore++
-    statusText += ' - The robot wins!'
+  } else if (remoteWins) {
+    remoteScore++
+    statusText += ' - The other wins!'
   }
 
-  UI.showRobotHand(true)
-  UI.setRobotGesture(computerGesture)
+  UI.showRemoteHand(true)
+  UI.setRemoteGesture(remoteGesture)
 
   UI.setStatusMessage(statusText)
 
   UI.setPlayerScore(playerScore)
-  UI.setRobotScore(computerScore)
+  UI.setRemoteScore(remoteScore)
 
   // wait for 3 seconds, then start next round
   setTimeout(playOneRound, 3000)

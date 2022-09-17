@@ -73,12 +73,12 @@ body {
 }
 
 .player-container,
-.robot-container {
+.remote-container {
   position: relative;
 }
 
 .player-container .player-video,
-.robot-container .removeVideo {
+.remote-container .removeVideo {
   min-height: 298px;
   width: 100%;
   object-fit: cover;
@@ -86,12 +86,12 @@ body {
   display: block;
 }
 
-.robot-container .avatar {
+.remote-container .avatar {
   width: 100%;
   display: none;
 }
 
-.robot-container .robot-hand {
+.remote-container .remote-hand {
   position: absolute;
   width: 100%;
   display: none;
