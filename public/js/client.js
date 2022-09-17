@@ -1,9 +1,10 @@
 // getting dom elements
-var divConsultingLift = document.getElementById("consultingLift");
+var divConsultingRoom = document.getElementById("consultingRoom");
 var remoteVideo = document.getElementById("remoteVideo");
 var canvas = document.getElementById("localCanvas");
 
 // variables
+var roomNumber;
 var localStream;
 var remoteStream;
 var rtcPeerConnection;
@@ -48,18 +49,20 @@ async function getFace(localVideo, options) {
 var socket = io();
 
 // get room number, then connect to room
-fetch(`http://localhost:3000/queue?liftId=${liftId}`).then(async (result) => {
+fetch(
+  `${window.location.protocol}//${window.location.host}/queue?liftId=${liftId}`
+).then(async (result) => {
   if (result.ok) {
-    const roomNumber = await result.json();
+    roomNumber = await result.json();
     socket.emit("create or join", roomNumber);
-    divConsultingLift.style = "display: block;";
+    divConsultingRoom.style = "display: block;";
   } else {
     alert(result.body);
   }
 });
 
 // message handlers
-socket.on("created", async function (lift) {
+socket.on("created", async function () {
   await faceapi.loadMtcnnModel("/weights");
   await faceapi.loadFaceRecognitionModel("/weights");
   navigator.mediaDevices
@@ -99,7 +102,7 @@ socket.on("created", async function (lift) {
     });
 });
 
-socket.on("joined", async function (lift) {
+socket.on("joined", async function () {
   await faceapi.loadMtcnnModel("/weights");
   await faceapi.loadFaceRecognitionModel("/weights");
   navigator.mediaDevices
@@ -132,7 +135,7 @@ socket.on("joined", async function (lift) {
       });
 
       localStream = canvas.captureStream(30);
-      socket.emit("ready", liftNumber);
+      socket.emit("ready", roomNumber);
     })
     .catch(function (err) {
       console.log("An error ocurred when accessing media devices", err);
@@ -185,7 +188,7 @@ function onIceCandidate(event) {
       label: event.candidate.sdpMLineIndex,
       id: event.candidate.sdpMid,
       candidate: event.candidate.candidate,
-      lift: liftNumber,
+      room: roomNumber,
     });
   }
 }
@@ -200,7 +203,7 @@ function setLocalAndOffer(sessionDescription) {
   socket.emit("offer", {
     type: "offer",
     sdp: sessionDescription,
-    lift: liftNumber,
+    room: roomNumber,
   });
 }
 
@@ -209,6 +212,6 @@ function setLocalAndAnswer(sessionDescription) {
   socket.emit("answer", {
     type: "answer",
     sdp: sessionDescription,
-    lift: liftNumber,
+    room: roomNumber,
   });
 }
