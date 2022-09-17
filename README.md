@@ -20,6 +20,8 @@ in Schindler partner network (coupon, loyalty point in local shop around the ele
 * TensorFlow is a free and open-source software library for machine learning and artificial intelligence.
 * TensorFlow based finger pose classifier for hand landmarks
 * QR code reader
+* GitHub code hosting
+* Figma design
 
 # Features
 * Unlimited support of elevators, one QR-Code per elevator
