@@ -11,6 +11,23 @@ connected to another lift user in the world for the duration of a game, or just 
 Winning a game, or traveling (vertical miles) entitled you to a Ethereum LevelUp token, that can be later exchange
 in Schindler partner network (coupon, loyalty point in local shop around the elevator).
 
+# Technologies
+* Javascript
+* Nodejs
+* HTML + CSS
+* WebRTC is a free and open-source project providing web browsers and mobile applications with real-time communication via application programming interfaces.
+* Amazon AWS EC2 hosting
+* TensorFlow is a free and open-source software library for machine learning and artificial intelligence.
+* TensorFlow based finger pose classifier for hand landmarks
+* QR code reader
+
+# Features
+* Unlimited support of elevators, one QR-Code per elevator
+* Sleek mobile first web gui
+* Real time video feed between elevator passengers using WebRTC
+* Real time on device machine learning to detect hand position
+* Rock scissor paper game with anybody scanning a QR code
+
 # Schindler challenge
 
 A passenger's journey goes beyond the elevator trip, there is much more than going up & down. It's about moving from A

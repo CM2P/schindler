@@ -6,15 +6,23 @@ import { Prediction } from './js/Prediction'
 
 import camConfig from '@/js/CameraConfig'
 
+
 // store a reference to the player video
 var playerVideo
 
 // keep track of scores
-var playerScore = 0,
-  remoteScore = 0
+var player1Score = 0,
+  player2Score = 0
+
+const urlParams = new URLSearchParams(window.location.search)
+const liftId = urlParams.get('liftId')
+
+var roomUuid = null;
 
 // setup & initialization
 async function onInit() {
+  roomUuid =  getRoomUuid(liftId);
+
   UI.init()
   UI.setStatusMessage('Initializing - Please wait a moment')
 
@@ -123,7 +131,7 @@ function detectPlayerGesture(requiredDuration) {
           const remoteGesture = getRandomGesture()
 
           // check the game result
-          checkResult(playerGesture, remoteGesture)
+          checkResult(playerGesture)
         }
       })
     }, 0)
@@ -132,58 +140,24 @@ function detectPlayerGesture(requiredDuration) {
   predictNonblocking()
 }
 
-function checkResult(playerGesture, remoteGesture) {
-  let statusText
-  let playerWins = false
-  let remoteWins = false
+function checkResult(playerGesture) {
+  var game = play(liftId, roomUuid, playerGesture);
 
-  if (playerGesture == remoteGesture) {
-    // draw
-    statusText = "It's a draw!"
-  } else {
-    // check whinner
-    if (playerGesture == 'rock') {
-      if (remoteGesture == 'scissors') {
-        playerWins = true
-        statusText = 'Rock beats scissors'
-      } else {
-        remoteWins = true
-        statusText = 'Paper beats rock'
-      }
-    } else if (playerGesture == 'paper') {
-      if (remoteGesture == 'rock') {
-        playerWins = true
-        statusText = 'Paper beats rock'
-      } else {
-        remoteWins = true
-        statusText = 'Scissors beat paper'
-      }
-    } else if (playerGesture == 'scissors') {
-      if (remoteGesture == 'paper') {
-        playerWins = true
-        statusText = 'Scissors beat paper'
-      } else {
-        remoteWins = true
-        statusText = 'Rock beats scissors'
-      }
-    }
-  }
+  if (game.player1Wins) {
+    player1Score++
 
-  if (playerWins) {
-    playerScore++
-    statusText += ' - You win!'
-  } else if (remoteWins) {
-    remoteScore++
-    statusText += ' - The other wins!'
+  } else if (game.player2Wins) {
+    player2Score++
   }
+  statusText += game.statusText;
 
   UI.showRemoteHand(true)
   UI.setRemoteGesture(remoteGesture)
 
   UI.setStatusMessage(statusText)
 
-  UI.setPlayerScore(playerScore)
-  UI.setRemoteScore(remoteScore)
+  UI.setPlayerScore(player1Score)
+  UI.setRemoteScore(player2Score)
 
   // wait for 3 seconds, then start next round
   setTimeout(playOneRound, 3000)

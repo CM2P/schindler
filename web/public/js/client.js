@@ -58,16 +58,29 @@ const apiUrl = `${window.location.protocol}//${hostname}${port}`
 // Let's do this
 var socket = io(apiUrl)
 
-// get room number, then connect to room
-fetch(`${apiUrl}/queue?liftId=${liftId}`).then(async (result) => {
-  if (result.ok) {
-    roomNumber = await result.json()
-    socket.emit('create or join', roomNumber)
-    divConsultingRoom.style = 'display: block;'
-  } else {
-    alert(result.body)
-  }
-})
+async function getRoomUuid(liftId) {
+  fetch(`${apiUrl}/queue?liftId=${liftId}`).then(async (result) => {
+    if (result.ok) {
+      var roomUuid = await result.json()
+      socket.emit('create or join', roomNumber)
+      divConsultingRoom.style = 'display: block;'
+
+      return roomUuid;
+    } else {
+      alert(result.body)
+    }
+  })
+}
+
+async function play(liftId, roomUuid, playerGesture) {
+  fetch(`${apiUrl}/player?liftId=${liftId}&roomUuid=${roomUuid}&playerGesture=${playerGesture}`).then(async (result) => {
+    if (result.ok) {
+      return  await result.json()
+    } else {
+      alert(result.body)
+    }
+  })
+}
 
 // message handlers
 socket.on('created', async function (room) {
