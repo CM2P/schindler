@@ -14,10 +14,89 @@ to interact in different ways with our products!
 
 Visit hack.schindler.com (to be published soon) for further details.
 
-# Install
+# Install developer
 git clone https://github.com/CM2P/schindler.git
 npm install
 node server.js
+
+# Runtime
+get an AWS server with ubuntu 22.04 LTS
+
+```
+sudo su -
+apt-get install nginx
+apt-get install certbot
+vi /etc/nginx/sites-enabled/levelup
+```
+and add
+```
+server {
+    server_name level-up.app www.level-up.app;
+    access_log off;
+    error_log  /home/levelup.error error;
+    listen 80 ssl; 
+
+    location / {
+    proxy_pass http://127.0.0.1:3000;
+    }
+}
+
+server {
+    if ($host = level-up.app) {
+    return 301 https://$host$request_uri;
+    } # managed by Certbot
+    server_name level-up.app www.level-up.app;
+    return 404; # managed by Certbot
+}
+```
+
+# get a valid certificate 
+```
+sudo apt-get remove certbot
+sudo snap install core; sudo snap refresh core
+sudo ln -s /snap/bin/certbot /usr/bin/certbot
+sudo certbot --nginx
+```
+FYi this will modify the nginx file like 
+
+```
+server {
+server_name level-up.app www.level-up.app;
+access_log off;
+error_log  /home/levelup.error error;
+
+    location / {
+    proxy_pass http://127.0.0.1:3000;
+    }
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/level-up.app/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/level-up.app/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+
+server {
+    if ($host = www.level-up.app) {
+    return 301 https://$host$request_uri;
+    } # managed by Certbot
+    if ($host = level-up.app) {
+    return 301 https://$host$request_uri;
+    } # managed by Certbot
+    server_name level-up.app www.level-up.app;
+    return 404; # managed by Certbot
+
+
+}
+server {
+    if ($host = level-up.app) {
+    return 301 https://$host$request_uri;
+    } # managed by Certbot
+    server_name level-up.app www.level-up.app;
+    listen 80;
+    return 404; # managed by Certbot
+}
+```
 
 # Face api AI
 https://justadudewhohacks.github.io/face-api.js/docs/index.html
