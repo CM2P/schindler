@@ -56,6 +56,33 @@ app.get("/queue", (req, res) => {
   res.send("1");
 });
 
+app.get('/lift', async function(req, res) {
+    var liftId = req.query.liftId;
+    console.log("liftId '" + liftId + "' in request");
+
+    var request = require('request');
+    var options = {
+      'method': 'GET',
+      'url': 'https://hack.myport.guide/lift/',
+      'headers': {
+          'Accept': 'application/json'
+        }
+    };
+    request(options, function (error, response) {
+      if (error) throw new Error(error);
+       var json = JSON.parse(response.body);
+       for(var attributename in json){
+          var name =  json[attributename].name;
+          console.log("Lift name '" + name + "' found");
+          if (name == liftId)  {
+            console.log("Lift Id '" + liftId + "' match name '" + name + "'");
+            return res.send(json[attributename]);
+          }
+       }
+       return res.send("Did not found lift by Id" + liftId);
+    });
+});
+
 // listener
 http.listen(3000, function () {
   console.log("listening on *:3000");
