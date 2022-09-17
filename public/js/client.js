@@ -48,7 +48,9 @@ async function getFace(localVideo, options) {
 var socket = io();
 
 // get room number, then connect to room
-fetch(`http://localhost:3000/queue?liftId=${liftId}`).then(async (result) => {
+fetch(
+  `${window.location.protocol}//${window.location.host}/queue?liftId=${liftId}`
+).then(async (result) => {
   if (result.ok) {
     const roomNumber = await result.json();
     socket.emit("create or join", roomNumber);
