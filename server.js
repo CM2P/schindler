@@ -15,7 +15,7 @@ io.on('connection', function (socket) {
     socket.on('create or join', function (lift) {
         console.log('create or join to lift ', lift);
         
-        var myRoom = io.sockets.adapter.lifts[lift] || { length: 0 };
+        var myRoom = io.sockets.adapter.rooms[lift] || { length: 0 };
         var numClients = myRoom.length;
 
         console.log(lift, ' has ', numClients, ' clients');
