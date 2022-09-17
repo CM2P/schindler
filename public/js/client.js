@@ -43,7 +43,12 @@ var results = [];
 function get_random (list) {
   return list[Math.floor((Math.random()*list.length))];
 }
-var wears = ["img/sunglasses.png", "img/sunglasses1.png", "img/fullface1.png" ];
+var wears = [
+"img/sunglasses.png",
+"img/sunglasses1.png",
+"img/fullface1.png",
+"img/fullface2.png"
+];
 
 //utility functions
 async function getFace(localVideo, options) {
