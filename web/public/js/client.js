@@ -1,7 +1,7 @@
 // getting dom elements
 var divConsultingRoom = document.getElementById('consultingRoom')
 var remoteVideo = document.getElementById('remoteVideo')
-var canvas = document.getElementById('localCanvas')
+var canvas = document.getElementById('player-video')
 
 // variables
 var roomNumber
@@ -50,13 +50,13 @@ async function getFace(localVideo, options) {
   results = await faceapi.mtcnn(localVideo, options)
 }
 
-// Let's do this
-var socket = io('http://localhost:3000')
+const apiUrl = `${window.location.protocol}//${window.location.hostname}:3000`
 
-// `${window.location.protocol}//${window.location.host}/queue?liftId=${liftId}`
+// Let's do this
+var socket = io(apiUrl)
 
 // get room number, then connect to room
-fetch(`http://localhost:3000/queue?liftId=${liftId}`).then(async (result) => {
+fetch(`${apiUrl}/queue?liftId=${liftId}`).then(async (result) => {
   if (result.ok) {
     roomNumber = await result.json()
     socket.emit('create or join', roomNumber)

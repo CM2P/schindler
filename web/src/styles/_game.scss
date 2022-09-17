@@ -61,9 +61,15 @@ body {
 }
 
 @keyframes fadeInOut {
-  0% { opacity: 1; }
-  50% { opacity: 0.2; }
-  100% { opacity:1; }
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .player-container,
@@ -71,7 +77,8 @@ body {
   position: relative;
 }
 
-.player-container .player-video {
+.player-container .player-video,
+.robot-container .removeVideo {
   min-height: 298px;
   width: 100%;
   object-fit: cover;
@@ -81,7 +88,7 @@ body {
 
 .robot-container .avatar {
   width: 100%;
-  display: block;
+  display: none;
 }
 
 .robot-container .robot-hand {
@@ -112,14 +119,20 @@ body {
 }
 
 .player-hand-zoom {
-  animation: handZoom .5s;
+  animation: handZoom 0.5s;
   animation-iteration-count: 1;
 }
 
 @keyframes handZoom {
-  0% { font-size: 42px; }
-  50% { font-size: 64px; }
-  100% { font-size: 42px; }
+  0% {
+    font-size: 42px;
+  }
+  50% {
+    font-size: 64px;
+  }
+  100% {
+    font-size: 42px;
+  }
 }
 
 .timer-ring-circle {

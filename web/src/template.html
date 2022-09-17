@@ -10,14 +10,6 @@
 
   <body>
     <div id="root">
-      <div id="consultingRoom" style="display: none">
-        <div id="location"></div>
-        <canvas id="localCanvas" width="640" height="480"
-          >Your browser does not support Canvas</canvas
-        >
-        <video id="remoteVideo" playsinline autoplay></video>
-      </div>
-
       <h1 class="ff-8bit">Let's play Rock ✊ Paper 🤚 Scissors ✌</h1>
 
       <p class="instructions">
@@ -32,12 +24,7 @@
             <span class="score" id="score1">0</span>
           </h2>
           <div class="player-container">
-            <video
-              id="player-video"
-              class="player-video"
-              poster="assets/human.png"
-              playsinline
-            ></video>
+            <video id="player-video" class="player-video" playsinline></video>
 
             <div class="player-hand-container">
               <!-- shows the current recognized gesture -->
@@ -75,6 +62,7 @@
             <span class="score" id="score2">0</span>
           </h2>
           <div class="robot-container">
+            <video id="remoteVideo" playsinline autoplay></video>
             <img id="robot" class="avatar" src="assets/robot.gif" alt="" />
             <img id="robot-hand" class="robot-hand" alt="" />
           </div>
@@ -85,11 +73,6 @@
         </div>
       </div>
     </div>
-    <!-- <script
-      src="https://cdn.socket.io/4.5.0/socket.io.min.js"
-      integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k"
-      crossorigin="anonymous"
-    ></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.slim.js"></script>
     <script src="lib/face-api.min.js"></script>
     <script src="js/client.js"></script>
