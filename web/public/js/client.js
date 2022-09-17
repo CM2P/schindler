@@ -50,7 +50,9 @@ async function getFace(localVideo, options) {
   results = await faceapi.mtcnn(localVideo, options)
 }
 
-const apiUrl = `${window.location.protocol}//${window.location.hostname}:3000`
+const hostname = window.location.hostname.replace('dev', 'backend')
+
+const apiUrl = `${window.location.protocol}//${hostname}`
 
 // Let's do this
 var socket = io(apiUrl)
