@@ -6,7 +6,6 @@ import { Prediction } from './js/Prediction'
 
 import camConfig from '@/js/CameraConfig'
 
-
 // store a reference to the player video
 var playerVideo
 
@@ -17,14 +16,13 @@ var player1Score = 0,
 const urlParams = new URLSearchParams(window.location.search)
 const liftId = urlParams.get('liftId')
 
-var roomUuid = null;
+var roomUuid = null
 
 // setup & initialization
 async function onInit() {
-  roomUuid =  getRoomUuid(liftId);
+  roomUuid = getRoomUuid(liftId)
 
   UI.init()
-  UI.setStatusMessage('Initializing - Please wait a moment')
 
   const videoPromise = UI.initPlayerVideo(camConfig)
   const predictPromise = Prediction.init()
@@ -38,37 +36,16 @@ async function onInit() {
 
     console.log('Initialization finished')
 
-    // game is ready
-    waitForPlayer()
+    UI.transitionToSecondPage()
+
+    // start game
+    playOneRound()
   })
 }
 //-----
 
 // game logic
 // -----------------------------------------------------------------------------
-function waitForPlayer() {
-  // show a blinking start message
-  if (UI.isMobile()) {
-    UI.setStatusMessage('Touch the screen to start')
-  } else {
-    UI.setStatusMessage('Press any key to start')
-  }
-
-  UI.startAnimateMessage()
-
-  const startGame = () => {
-    UI.stopAnimateMessage()
-    playOneRound()
-  }
-
-  // wait for player to press any key
-  // then stop blinking and play one round
-  if (UI.isMobile()) {
-    document.addEventListener('touchstart', startGame, { once: true })
-  } else {
-    window.addEventListener('keypress', startGame, { once: true })
-  }
-}
 
 async function playOneRound() {
   // hide the timer circle
@@ -141,20 +118,17 @@ function detectPlayerGesture(requiredDuration) {
 }
 
 function checkResult(playerGesture) {
-  var game = play(liftId, roomUuid, playerGesture);
+  var game = play(liftId, roomUuid, playerGesture)
 
   if (game.player1Wins) {
     player1Score++
-
   } else if (game.player2Wins) {
     player2Score++
   }
-  statusText += game.statusText;
+  statusText += game.statusText
 
   UI.showRemoteHand(true)
   UI.setRemoteGesture(remoteGesture)
-
-  UI.setStatusMessage(statusText)
 
   UI.setPlayerScore(player1Score)
   UI.setRemoteScore(player2Score)

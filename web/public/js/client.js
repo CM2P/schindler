@@ -1,6 +1,5 @@
 // getting dom elements
-var divConsultingRoom = document.getElementById('consultingRoom')
-var remoteVideo = document.getElementById('remoteVideo')
+var remoteVideo = document.getElementById('remote-video')
 var canvas = document.getElementById('player-video')
 
 // variables
@@ -65,7 +64,7 @@ async function getRoomUuid(liftId) {
       socket.emit('create or join', roomNumber)
       divConsultingRoom.style = 'display: block;'
 
-      return roomUuid;
+      return roomUuid
     } else {
       alert(result.body)
     }
@@ -73,9 +72,11 @@ async function getRoomUuid(liftId) {
 }
 
 async function play(liftId, roomUuid, playerGesture) {
-  fetch(`${apiUrl}/player?liftId=${liftId}&roomUuid=${roomUuid}&playerGesture=${playerGesture}`).then(async (result) => {
+  fetch(
+    `${apiUrl}/player?liftId=${liftId}&roomUuid=${roomUuid}&playerGesture=${playerGesture}`
+  ).then(async (result) => {
     if (result.ok) {
-      return  await result.json()
+      return await result.json()
     } else {
       alert(result.body)
     }
