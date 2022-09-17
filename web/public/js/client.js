@@ -51,8 +51,9 @@ async function getFace(localVideo, options) {
 }
 
 const hostname = window.location.hostname.replace('dev', 'backend')
+const port = window.location.hostname === 'localhost' ? ':3000' : ''
 
-const apiUrl = `${window.location.protocol}//${hostname}`
+const apiUrl = `${window.location.protocol}//${hostname}${port}`
 
 // Let's do this
 var socket = io(apiUrl)
