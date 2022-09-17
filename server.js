@@ -12,39 +12,39 @@ app.use(express.static('public'));
 io.on('connection', function (socket) {
     console.log('a user connected');
 
-    socket.on('create or join', function (room) {
-        console.log('create or join to room ', room);
+    socket.on('create or join', function (lift) {
+        console.log('create or join to lift ', lift);
         
-        var myRoom = io.sockets.adapter.rooms[room] || { length: 0 };
+        var myRoom = io.sockets.adapter.lifts[lift] || { length: 0 };
         var numClients = myRoom.length;
 
-        console.log(room, ' has ', numClients, ' clients');
+        console.log(lift, ' has ', numClients, ' clients');
 
         if (numClients == 0) {
-            socket.join(room);
-            socket.emit('created', room);
+            socket.join(lift);
+            socket.emit('created', lift);
         } else if (numClients == 1) {
-            socket.join(room);
-            socket.emit('joined', room);
+            socket.join(lift);
+            socket.emit('joined', lift);
         } else {
-            socket.emit('full', room);
+            socket.emit('full', lift);
         }
     });
 
-    socket.on('ready', function (room){
-        socket.broadcast.to(room).emit('ready');
+    socket.on('ready', function (lift){
+        socket.broadcast.to(lift).emit('ready');
     });
 
     socket.on('candidate', function (event){
-        socket.broadcast.to(event.room).emit('candidate', event);
+        socket.broadcast.to(event.lift).emit('candidate', event);
     });
 
     socket.on('offer', function(event){
-        socket.broadcast.to(event.room).emit('offer',event.sdp);
+        socket.broadcast.to(event.lift).emit('offer',event.sdp);
     });
 
     socket.on('answer', function(event){
-        socket.broadcast.to(event.room).emit('answer',event.sdp);
+        socket.broadcast.to(event.lift).emit('answer',event.sdp);
     });
 
 });

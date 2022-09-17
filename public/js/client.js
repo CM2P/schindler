@@ -30,7 +30,7 @@ const iceServers = {
         { 'url': 'stun:stun.l.google.com:19302' }
     ]
 }
-const streamConstraints = { audio: true, video: true };
+const streamConstraints = { audio: false, video: true };
 const mtcnnForwardParams = {
     // limiting the search space to larger faces for webcam detection
     minFaceSize: 200
@@ -51,7 +51,7 @@ btnGoLift.onclick = function () {
     if (inputLiftNumber.value === '') {step
         alert("Please type a lift number")
     } else {
-        roomNumber = inputLiftNumber.value;
+        liftNumber = inputLiftNumber.value;
         socket.emit('create or join', liftNumber);
         divSelectLift.style = "display: none;";
         divConsultingLift.style = "display: block;";
