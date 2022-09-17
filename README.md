@@ -3,6 +3,16 @@
 https://level-up.app
 https://www.level-up.app
 
+## What is level up
+
+We want to add QR code stickers in all Schindler lift worldwide. Customer can scan these and be remotely
+connected to another lift user in the world for the duration of a game, or just to say Hi for 4 seconds.
+
+Winning a game, or traveling (vertical miles) entitled you to a Casper LevelUp token, that can be later exchange
+in Schindler partner network for
+
+
+
 # Schindler challenge
 
 A passenger's journey goes beyond the elevator trip, there is much more than going up & down. It's about moving from A
@@ -106,6 +116,11 @@ server {
 The Certbot packages on your system come with a cron job or systemd timer that will
 renew your certificates automatically before they expire.
 
+# Schindler API
+Visit https://hack.myport.guide/ui/paas/learn/specs/open-api and
+import https://hack.myport.guide/specs/openAPI/PortGatewayAPI.yaml into Postman (https://www.postman.com)
+
+
 
 # Client
 Call endpoint with query parameter "liftId" and the id of the lift http://localhost:3000/?liftId=123
@@ -115,3 +130,22 @@ https://justadudewhohacks.github.io/face-api.js/docs/index.html
 
 # QR code generator
 https://www.qrcode-monkey.com/
+
+we generate as much qrcode as lift using Lift name values. Lift name should in reality a
+GLOBAL LIFT IDENTIFIER that uniquely
+```
+https://level-up.app/?liftId=A
+https://level-up.app/?liftId=B
+https://level-up.app/?liftId=C
+https://level-up.app/?liftId=D
+```
+and Schindler color rgb(220,0,0) or in Hex #DC0000
+
+example:
+
+
+# Casper Token Level-Up
+
+npm install casper-js-sdk --save
+
+
