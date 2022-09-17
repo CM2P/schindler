@@ -62,7 +62,7 @@ fetch(
 });
 
 // message handlers
-socket.on("created", async function () {
+socket.on("created", async function (room) {
   await faceapi.loadMtcnnModel("/weights");
   await faceapi.loadFaceRecognitionModel("/weights");
   navigator.mediaDevices
@@ -102,7 +102,7 @@ socket.on("created", async function () {
     });
 });
 
-socket.on("joined", async function () {
+socket.on("joined", async function (room) {
   await faceapi.loadMtcnnModel("/weights");
   await faceapi.loadFaceRecognitionModel("/weights");
   navigator.mediaDevices

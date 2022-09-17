@@ -123,11 +123,8 @@ import https://hack.myport.guide/specs/openAPI/PortGatewayAPI.yaml into Postman 
 # Client API
 Call endpoint with query parameter "liftId" and the id of the lift http://localhost:3000/?liftId=123 to start a Web RTC session.
 
-
 # Server API
-
 http://localhost:3000/lift?liftId=A  return te whole Lift information
-
 
 # Face api AI
 https://justadudewhohacks.github.io/face-api.js/docs/index.html
