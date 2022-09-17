@@ -13,8 +13,7 @@ var playerVideo
 var playerScore = 0,
   remoteScore = 0
 
-// setyp & initialization
-// -----------------------------------------------------------------------------
+// setup & initialization
 async function onInit() {
   UI.init()
   UI.setStatusMessage('Initializing - Please wait a moment')
