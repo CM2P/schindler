@@ -12,7 +12,7 @@ app.use(express.static("public"));
 
 const cors = require("cors");
 const corsOption = {
-  origin: ["http://localhost:8080"],
+  origin: ["http://localhost:8080", "https://level-up.app/"],
 };
 app.use(cors(corsOption));
 
