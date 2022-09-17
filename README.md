@@ -15,7 +15,7 @@ facilitate the journey to its destination in any kind. You are free to consider 
 way before entering a building or just focus on giving an awesome experience during the elevator ride. The challenge is
 to bring value by socializing, providing information, creating excitement or simply by entertaining via gamification. We
 are eager to see how your creativity will elevate the passenger experience to the next level and will encourage people
-to interact in different ways with our products! 
+to interact in different ways with our products!
 
 Visit hack.schindler.com (to be published soon) for further details.
 
@@ -39,7 +39,7 @@ server {
     server_name level-up.app www.level-up.app;
     access_log off;
     error_log  /home/levelup.error error;
-    listen 80 ssl; 
+    listen 80 ssl;
 
     location / {
     proxy_pass http://127.0.0.1:3000;
@@ -55,14 +55,14 @@ server {
 }
 ```
 
-# get a valid certificate 
+# get a valid certificate
 ```
 sudo apt-get remove certbot
 sudo snap install core; sudo snap refresh core
 sudo ln -s /snap/bin/certbot /usr/bin/certbot
 sudo certbot --nginx
 ```
-FYi this will modify the nginx file like 
+FYi this will modify the nginx file like
 
 ```
 server {
@@ -103,11 +103,12 @@ server {
 }
 ```
 
-The Certbot packages on your system come with a cron job or systemd timer that will 
+The Certbot packages on your system come with a cron job or systemd timer that will
 renew your certificates automatically before they expire.
 
 
-
+# Client
+Call endpoint with query parameter "liftId" and the id of the lift http://localhost:3000/?liftId=123
 
 # Face api AI
 https://justadudewhohacks.github.io/face-api.js/docs/index.html

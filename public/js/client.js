@@ -1,17 +1,17 @@
 // getting dom elements
-var divSelectLift = document.getElementById("selectLift");
 var divConsultingLift = document.getElementById("consultingLift");
-var inputLiftNumber = document.getElementById("liftNumber");
-var btnGoLift = document.getElementById("goLift");
 var remoteVideo = document.getElementById("remoteVideo");
 var canvas = document.getElementById("localCanvas");
 
 // variables
-var liftNumber;
 var localStream;
 var remoteStream;
 var rtcPeerConnection;
 var isCaller;
+
+// setup queue
+const urlParams = new URLSearchParams(window.location.search);
+const liftId = urlParams.get("liftId");
 
 // STUN servers are used by both clients to determine their IP
 // address as visible by the global Internet.If both the peers
@@ -25,180 +25,190 @@ var isCaller;
 // There are many stun servers provided by google and other sites which one could use .
 // You can also setup your own STUn server according to rfc5766.
 const iceServers = {
-    'iceServers': [
-        { 'url': 'stun:mtcnnRstun.services.mozilla.com' },
-        { 'url': 'stun:stun.l.google.com:19302' }
-    ]
-}
+  iceServers: [
+    { url: "stun:mtcnnRstun.services.mozilla.com" },
+    { url: "stun:stun.l.google.com:19302" },
+  ],
+};
 const streamConstraints = { audio: false, video: true };
 const mtcnnForwardParams = {
-    // limiting the search space to larger faces for webcam detection
-    minFaceSize: 200
-}
+  // limiting the search space to larger faces for webcam detection
+  minFaceSize: 200,
+};
 
 //positions for sunglasess
-var results = []
+var results = [];
 
 //utility functions
-async function getFace(localVideo, options){
-    results = await faceapi.mtcnn(localVideo, options)
+async function getFace(localVideo, options) {
+  results = await faceapi.mtcnn(localVideo, options);
 }
 
 // Let's do this
 var socket = io();
 
-btnGoLift.onclick = function () {
-    if (inputLiftNumber.value === '') {step
-        alert("Please type a lift number")
-    } else {
-        liftNumber = inputLiftNumber.value;
-        socket.emit('create or join', liftNumber);
-        divSelectLift.style = "display: none;";
-        divConsultingLift.style = "display: block;";
-    }
-};
+// get room number, then connect to room
+fetch(`http://localhost:3000/queue?liftId=${liftId}`).then(async (result) => {
+  if (result.ok) {
+    const roomNumber = await result.json();
+    socket.emit("create or join", roomNumber);
+    divConsultingLift.style = "display: block;";
+  } else {
+    alert(result.body);
+  }
+});
 
 // message handlers
-socket.on('created', async function (lift) {
-    await faceapi.loadMtcnnModel('/weights')
-    await faceapi.loadFaceRecognitionModel('/weights')
-    navigator.mediaDevices.getUserMedia(streamConstraints).then(function (stream) {
-        let localVideo = document.createElement("video")
-        localVideo.srcObject = stream;
-        localVideo.autoplay = true
-        localVideo.addEventListener('playing', () => {
-            let ctx = canvas.getContext("2d");
-            let image = new Image()
-            image.src = "img/sunglasses.png"
-            
-            function step() {
-                getFace(localVideo, mtcnnForwardParams)
-                ctx.drawImage(localVideo, 0, 0)
-                results.map(result => {
-                    ctx.drawImage(
-                        image,
-                        result.faceDetection.box.x + 15,
-                        result.faceDetection.box.y + 30,
-                        result.faceDetection.box.width,
-                        result.faceDetection.box.width * (image.height / image.width)
-                    )
-                })
-                requestAnimationFrame(step)
-            }
+socket.on("created", async function (lift) {
+  await faceapi.loadMtcnnModel("/weights");
+  await faceapi.loadFaceRecognitionModel("/weights");
+  navigator.mediaDevices
+    .getUserMedia(streamConstraints)
+    .then(function (stream) {
+      let localVideo = document.createElement("video");
+      localVideo.srcObject = stream;
+      localVideo.autoplay = true;
+      localVideo.addEventListener("playing", () => {
+        let ctx = canvas.getContext("2d");
+        let image = new Image();
+        image.src = "img/sunglasses.png";
 
-            requestAnimationFrame(step)
-        })
+        function step() {
+          getFace(localVideo, mtcnnForwardParams);
+          ctx.drawImage(localVideo, 0, 0);
+          results.map((result) => {
+            ctx.drawImage(
+              image,
+              result.faceDetection.box.x + 15,
+              result.faceDetection.box.y + 30,
+              result.faceDetection.box.width,
+              result.faceDetection.box.width * (image.height / image.width)
+            );
+          });
+          requestAnimationFrame(step);
+        }
 
-        localStream = canvas.captureStream(30)
-        isCaller = true;
-    }).catch(function (err) {
-        console.log('An error ocurred when accessing media devices', err);
+        requestAnimationFrame(step);
+      });
+
+      localStream = canvas.captureStream(30);
+      isCaller = true;
+    })
+    .catch(function (err) {
+      console.log("An error ocurred when accessing media devices", err);
     });
 });
 
-socket.on('joined', async function (lift) {
-    await faceapi.loadMtcnnModel('/weights')
-    await faceapi.loadFaceRecognitionModel('/weights')
-    navigator.mediaDevices.getUserMedia(streamConstraints).then(function (stream) {
-        let localVideo = document.createElement("video")
-        localVideo.srcObject = stream;
-        localVideo.autoplay = true
-        localVideo.addEventListener('playing', () => {
-            let ctx = canvas.getContext("2d");
-            let image = new Image()
-            image.src = "img/sunglasses-style.png"
+socket.on("joined", async function (lift) {
+  await faceapi.loadMtcnnModel("/weights");
+  await faceapi.loadFaceRecognitionModel("/weights");
+  navigator.mediaDevices
+    .getUserMedia(streamConstraints)
+    .then(function (stream) {
+      let localVideo = document.createElement("video");
+      localVideo.srcObject = stream;
+      localVideo.autoplay = true;
+      localVideo.addEventListener("playing", () => {
+        let ctx = canvas.getContext("2d");
+        let image = new Image();
+        image.src = "img/sunglasses-style.png";
 
-            function step() {
-                getFace(localVideo, mtcnnForwardParams)
-                ctx.drawImage(localVideo, 0, 0)
-                results.map(result => {
-                    ctx.drawImage(
-                        image,
-                        result.faceDetection.box.x,
-                        result.faceDetection.box.y + 30,
-                        result.faceDetection.box.width,
-                        result.faceDetection.box.width * (image.height / image.width)
-                    )
-                })
-                requestAnimationFrame(step)
-            }
-            
-            requestAnimationFrame(step)
-        })
+        function step() {
+          getFace(localVideo, mtcnnForwardParams);
+          ctx.drawImage(localVideo, 0, 0);
+          results.map((result) => {
+            ctx.drawImage(
+              image,
+              result.faceDetection.box.x,
+              result.faceDetection.box.y + 30,
+              result.faceDetection.box.width,
+              result.faceDetection.box.width * (image.height / image.width)
+            );
+          });
+          requestAnimationFrame(step);
+        }
 
-        localStream = canvas.captureStream(30);
-        socket.emit('ready', liftNumber);
-    }).catch(function (err) {
-        console.log('An error ocurred when accessing media devices', err);
+        requestAnimationFrame(step);
+      });
+
+      localStream = canvas.captureStream(30);
+      socket.emit("ready", liftNumber);
+    })
+    .catch(function (err) {
+      console.log("An error ocurred when accessing media devices", err);
     });
 });
 
-socket.on('candidate', function (event) {
-    var candidate = new RTCIceCandidate({
-        sdpMLineIndex: event.label,
-        candidate: event.candidate
+socket.on("candidate", function (event) {
+  var candidate = new RTCIceCandidate({
+    sdpMLineIndex: event.label,
+    candidate: event.candidate,
+  });
+  rtcPeerConnection.addIceCandidate(candidate);
+});
+
+socket.on("ready", function () {
+  if (isCaller) {
+    rtcPeerConnection = new RTCPeerConnection(iceServers);
+    rtcPeerConnection.onicecandidate = onIceCandidate;
+    rtcPeerConnection.onaddstream = onAddStream;
+    rtcPeerConnection.addStream(localStream);
+    rtcPeerConnection.createOffer(setLocalAndOffer, function (e) {
+      console.log(e);
     });
-    rtcPeerConnection.addIceCandidate(candidate);
+  }
 });
 
-socket.on('ready', function () {
-    if (isCaller) {
-        rtcPeerConnection = new RTCPeerConnection(iceServers);
-        rtcPeerConnection.onicecandidate = onIceCandidate;
-        rtcPeerConnection.onaddstream = onAddStream;
-        rtcPeerConnection.addStream(localStream);
-        rtcPeerConnection.createOffer(setLocalAndOffer, function (e) { console.log(e) });
-    }
-});
-
-socket.on('offer', function (event) {
-    if (!isCaller) {
-        rtcPeerConnection = new RTCPeerConnection(iceServers);
-        rtcPeerConnection.onicecandidate = onIceCandidate;
-        rtcPeerConnection.onaddstream = onAddStream;
-        rtcPeerConnection.addStream(localStream);
-        rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(event));
-        rtcPeerConnection.createAnswer(setLocalAndAnswer, function (e) { console.log(e) });
-    }
-});
-
-socket.on('answer', function (event) {
+socket.on("offer", function (event) {
+  if (!isCaller) {
+    rtcPeerConnection = new RTCPeerConnection(iceServers);
+    rtcPeerConnection.onicecandidate = onIceCandidate;
+    rtcPeerConnection.onaddstream = onAddStream;
+    rtcPeerConnection.addStream(localStream);
     rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(event));
-})
+    rtcPeerConnection.createAnswer(setLocalAndAnswer, function (e) {
+      console.log(e);
+    });
+  }
+});
+
+socket.on("answer", function (event) {
+  rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(event));
+});
 
 // handler functions
 function onIceCandidate(event) {
-    if (event.candidate) {
-        console.log('sending ice candidate');
-        socket.emit('candidate', {
-            type: 'candidate',
-            label: event.candidate.sdpMLineIndex,
-            id: event.candidate.sdpMid,
-            candidate: event.candidate.candidate,
-            lift: liftNumber
-        })
-    }
+  if (event.candidate) {
+    console.log("sending ice candidate");
+    socket.emit("candidate", {
+      type: "candidate",
+      label: event.candidate.sdpMLineIndex,
+      id: event.candidate.sdpMid,
+      candidate: event.candidate.candidate,
+      lift: liftNumber,
+    });
+  }
 }
 
 function onAddStream(event) {
-    remoteVideo.srcObject = event.stream;
-    remoteStream = event.stream;
+  remoteVideo.srcObject = event.stream;
+  remoteStream = event.stream;
 }
 
 function setLocalAndOffer(sessionDescription) {
-    rtcPeerConnection.setLocalDescription(sessionDescription);
-    socket.emit('offer', {
-        type: 'offer',
-        sdp: sessionDescription,
-        lift: liftNumber
-    });
+  rtcPeerConnection.setLocalDescription(sessionDescription);
+  socket.emit("offer", {
+    type: "offer",
+    sdp: sessionDescription,
+    lift: liftNumber,
+  });
 }
 
 function setLocalAndAnswer(sessionDescription) {
-    rtcPeerConnection.setLocalDescription(sessionDescription);
-    socket.emit('answer', {
-        type: 'answer',
-        sdp: sessionDescription,
-        lift: liftNumber
-    });
+  rtcPeerConnection.setLocalDescription(sessionDescription);
+  socket.emit("answer", {
+    type: "answer",
+    sdp: sessionDescription,
+    lift: liftNumber,
+  });
 }

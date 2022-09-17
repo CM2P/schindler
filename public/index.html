@@ -1,22 +1,18 @@
 <!DOCTYPE html>
 <head>
-    <title>Schindler HackZurich 2022 - Team CM2P</title>
+  <title>Schindler HackZurich 2022 - Team CM2P</title>
 </head>
 <body>
-    <h1>Schindler HackZurich 2022 - Team CM2P</h1>
+  <h1>Schindler HackZurich 2022 - Team CM2P</h1>
 
-    <div id="selectLift">
-        <label>Type the lift number</label>
-        <input id="liftNumber" type="text" />
-        <button id="goLift">Go</button>
-    </div>
+  <div id="consultingLift" style="display: none">
+    <canvas id="localCanvas" width="640" height="480"
+      >Your browser does not support Canvas</canvas
+    >
+    <video id="remoteVideo" playsinline autoplay></video>
+  </div>
 
-    <div id="consultingLift" style="display:none">
-        <canvas id="localCanvas" width="640" height="480">Your browser does not support Canvas</canvas>
-        <video id="remoteVideo" playsinline autoplay></video>
-    </div>
-
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="lib/face-api.min.js"></script>
-    <script src="js/client.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="lib/face-api.min.js"></script>
+  <script src="js/client.js"></script>
 </body>
