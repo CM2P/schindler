@@ -18,10 +18,11 @@ body {
 }
 
 .game-container {
+  position: relative;
+  flex: 1;
   max-width: 620px;
+  width: 100%;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
   margin: -6px auto;
 }
 
@@ -38,51 +39,53 @@ body {
 }
 
 .player {
-  margin: 6px;
-  width: calc(50% - 12px);
-  background-color: #999999;
-}
+  position: absolute;
+  height: 100%;
 
-.messages {
-  margin: 6px;
-  padding: 12px;
-  width: calc(100% - 12px);
-  background-color: #333333;
-  border: 1px solid #cccccc;
-}
-
-.message-text {
-  font-weight: 700;
-}
-
-.fade-in-out {
-  animation: fadeInOut 1s;
-  animation-iteration-count: infinite;
-}
-
-@keyframes fadeInOut {
-  0% {
-    opacity: 1;
+  &:nth-child(1) {
+    clip-path: polygon(0 100%, 35% 100%, 65% 0, 0 0);
+    z-index: 1;
+    background: linear-gradient(
+      173.97deg,
+      #ffffff 0%,
+      rgba(0, 0, 0, 0) 9.3%,
+      rgba(48, 48, 48, 0) 86.22%,
+      rgba(255, 253, 253, 0.94) 95.22%
+    );
   }
-  50% {
-    opacity: 0.2;
-  }
-  100% {
-    opacity: 1;
+
+  &:nth-child(2) {
+    background: linear-gradient(
+      173.97deg,
+      #ffffff 0%,
+      rgba(0, 0, 0, 0) 0.01%,
+      rgba(48, 48, 48, 0) 86.22%,
+      rgba(255, 253, 253, 0.94) 95.22%
+    );
   }
 }
 
 .player-container,
 .remote-container {
   position: relative;
+  height: 100%;
+  width: 100%;
 }
 
 .player-container .player-video,
-.remote-container .removeVideo {
+.remote-container .remote-video {
   width: 100%;
+  height: 100%;
   object-fit: cover;
-  transform: scaleX(-1);
   display: block;
+}
+
+.player-container .player-video {
+  transform: scaleX(-1) translateX(25%);
+}
+
+.remote-container .remote-video {
+  transform: translateX(25%);
 }
 
 .remote-container .avatar {

@@ -1,3 +1,6 @@
+const $firstPage = document.querySelector('#first-page')
+const $secondPage = document.querySelector('#second-page')
+
 const $playerScore = document.querySelector('#score1')
 const $playerVideo = document.querySelector('#player-video')
 const $playerHand = document.querySelector('#player-hand')
@@ -5,7 +8,7 @@ const $playerHand = document.querySelector('#player-hand')
 const $remoteScore = document.querySelector('#score2')
 const $remoteHand = document.querySelector('#remote-hand')
 
-const $statusText = document.querySelector('#message')
+const $countdown = document.querySelector('#countdown')
 
 const $timerRing = document.querySelector('#timer-ring')
 const $timerRingCircle = document.querySelector('#timer-ring-circle')
@@ -16,11 +19,6 @@ export const UI = {
   init: function () {
     this.initTimerCircle()
     this.showTimer(false)
-
-    // preload some images
-    new Image().src = 'assets/rock.png'
-    new Image().src = 'assets/paper.png'
-    new Image().src = 'assets/scissors.png'
   },
 
   initTimerCircle: function () {
@@ -28,28 +26,27 @@ export const UI = {
     $timerRingCircle.style.strokeDashoffset = `${circumference}`
   },
 
-  setStatusMessage: function (message) {
-    $statusText.textContent = message
+  setCountdown: function (value) {
+    $countdown.textContent = value
   },
 
-  startAnimateMessage: function () {
-    $statusText.classList.add('fade-in-out')
-  },
-
-  stopAnimateMessage: function () {
-    $statusText.classList.remove('fade-in-out')
+  stopCountdown: function () {
+    $countdown.classList.add('fade-out')
   },
 
   startCountdown: async function () {
     return new Promise((resolve) => {
-      this.setStatusMessage('On your marks!')
+      this.setCountdown(3)
       setTimeout(() => {
-        this.setStatusMessage('Ready')
+        this.setCountdown(2)
       }, 1000)
       setTimeout(() => {
-        this.setStatusMessage('Show your hand!!')
-        resolve()
+        this.setCountdown(1)
       }, 2000)
+      setTimeout(() => {
+        this.stopCountdown()
+        resolve()
+      }, 3000)
     })
   },
 
@@ -101,16 +98,17 @@ export const UI = {
   setRemoteGesture: function (gesture) {
     switch (gesture) {
       case 'rock':
-        $remoteHand.src = 'assets/rock.png'
+        $remoteHand.textContent = '✊'
         break
       case 'paper':
-        $remoteHand.src = 'assets/paper.png'
+        $remoteHand.textContent = '🤚'
         break
       case 'scissors':
-        $remoteHand.src = 'assets/scissors.png'
+        $remoteHand.textContent = '✌'
         break
       default:
-        $remoteHand.src = ''
+        $remoteHand.textContent = ''
+        break
     }
   },
 
@@ -133,5 +131,11 @@ export const UI = {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
       navigator.userAgent
     )
+  },
+
+  transitionToSecondPage: function () {
+    $firstPage.classList.add('fade-out')
+    $secondPage.classList.add('fade-in')
+    $secondPage.style.opacity = 1
   },
 }
