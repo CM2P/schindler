@@ -40,6 +40,11 @@ const mtcnnForwardParams = {
 //positions for sunglasess
 var results = [];
 
+function get_random (list) {
+  return list[Math.floor((Math.random()*list.length))];
+}
+var wears = ["img/sunglasses.png", "img/sunglasses1.png", "img/fullface1.png" ];
+
 //utility functions
 async function getFace(localVideo, options) {
   results = await faceapi.mtcnn(localVideo, options);
@@ -63,6 +68,9 @@ fetch(
 
 // message handlers
 socket.on("created", async function (room) {
+
+  const wear = get_random(wears);
+
   await faceapi.loadMtcnnModel("/weights");
   await faceapi.loadFaceRecognitionModel("/weights");
   navigator.mediaDevices
@@ -74,7 +82,16 @@ socket.on("created", async function (room) {
       localVideo.addEventListener("playing", () => {
         let ctx = canvas.getContext("2d");
         let image = new Image();
-        image.src = "img/sunglasses.png";
+
+
+        image.src = wear;
+
+        var x = 15;
+        var y = 30;
+        if (wear.includes("fullface"))  {
+          x = 15;
+          y = -5;
+        }
 
         function step() {
           getFace(localVideo, mtcnnForwardParams);
@@ -82,8 +99,8 @@ socket.on("created", async function (room) {
           results.map((result) => {
             ctx.drawImage(
               image,
-              result.faceDetection.box.x + 15,
-              result.faceDetection.box.y + 30,
+              result.faceDetection.box.x + x,
+              result.faceDetection.box.y + y,
               result.faceDetection.box.width,
               result.faceDetection.box.width * (image.height / image.width)
             );
