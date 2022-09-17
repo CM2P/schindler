@@ -1,7 +1,13 @@
 # Level-Up
 
-https://level-up.app
-https://www.level-up.app
+## Prod stage
+https://level-up.app or https://www.level-up.app
+
+## Dev stage
+https://dev.level-up.app/
+
+## Backend
+https://backend.level-up.app/
 
 ## What is level up
 
@@ -9,9 +15,7 @@ We want to add QR code stickers in all Schindler lift worldwide. Customer can sc
 connected to another lift user in the world for the duration of a game, or just to say Hi for 4 seconds.
 
 Winning a game, or traveling (vertical miles) entitled you to a Casper LevelUp token, that can be later exchange
-in Schindler partner network for
-
-
+in Schindler partner network.
 
 # Schindler challenge
 
@@ -133,7 +137,7 @@ https://justadudewhohacks.github.io/face-api.js/docs/index.html
 https://www.qrcode-monkey.com/
 
 we generate as much qrcode as lift using Lift name values. Lift name should in reality a
-GLOBAL LIFT IDENTIFIER that uniquely
+GLOBAL LIFT IDENTIFIER that uniquely identify an elevator worldwide.
 ```
 https://level-up.app/?liftId=A
 https://level-up.app/?liftId=B
@@ -142,11 +146,8 @@ https://level-up.app/?liftId=D
 ```
 and Schindler color rgb(220,0,0) or in Hex #DC0000
 
-example:
-
-
 # Casper Token Level-Up
 
-npm install casper-js-sdk --save
+WIP
 
 
