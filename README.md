@@ -123,7 +123,7 @@ import https://hack.myport.guide/specs/openAPI/PortGatewayAPI.yaml into Postman 
 
 
 # Client
-Call endpoint with query parameter "liftId" and the id of the lift http://localhost:3000/?liftId=123
+Call endpoint with query parameter "liftId" and the id of the lift https://level-up.app?liftId=123
 
 # Face api AI
 https://justadudewhohacks.github.io/face-api.js/docs/index.html
