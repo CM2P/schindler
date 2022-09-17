@@ -40,14 +40,14 @@ const mtcnnForwardParams = {
 //positions for sunglasess
 var results = [];
 
-function get_random (list) {
-  return list[Math.floor((Math.random()*list.length))];
+function get_random(list) {
+  return list[Math.floor(Math.random() * list.length)];
 }
 var wears = [
-"img/sunglasses.png",
-"img/sunglasses1.png",
-"img/fullface1.png",
-"img/fullface2.png"
+  "img/sunglasses.png",
+  "img/sunglasses1.png",
+  "img/fullface1.png",
+  "img/fullface2.png",
 ];
 
 //utility functions
@@ -73,7 +73,6 @@ fetch(
 
 // message handlers
 socket.on("created", async function (room) {
-
   const wear = get_random(wears);
 
   await faceapi.loadMtcnnModel("/weights");
@@ -88,12 +87,11 @@ socket.on("created", async function (room) {
         let ctx = canvas.getContext("2d");
         let image = new Image();
 
-
         image.src = wear;
 
         var x = 15;
         var y = 30;
-        if (wear.includes("fullface"))  {
+        if (wear.includes("fullface")) {
           x = 15;
           y = -5;
         }

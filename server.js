@@ -10,6 +10,12 @@ const queue = [];
 // express routing
 app.use(express.static("public"));
 
+const cors = require("cors");
+const corsOption = {
+  origin: ["http://localhost:8080"],
+};
+app.use(cors(corsOption));
+
 // signaling
 io.on("connection", function (socket) {
   console.log("a user connected");
@@ -56,31 +62,31 @@ app.get("/queue", (req, res) => {
   res.send("1");
 });
 
-app.get('/lift', async function(req, res) {
-    var liftId = req.query.liftId;
-    console.log("liftId '" + liftId + "' in request");
+app.get("/lift", async function (req, res) {
+  var liftId = req.query.liftId;
+  console.log("liftId '" + liftId + "' in request");
 
-    var request = require('request');
-    var options = {
-      'method': 'GET',
-      'url': 'https://hack.myport.guide/lift/',
-      'headers': {
-          'Accept': 'application/json'
-        }
-    };
-    request(options, function (error, response) {
-      if (error) throw new Error(error);
-       var json = JSON.parse(response.body);
-       for(var attributename in json){
-          var name =  json[attributename].name;
-          console.log("Lift name '" + name + "' found");
-          if (name == liftId)  {
-            console.log("Lift Id '" + liftId + "' match name '" + name + "'");
-            return res.send(json[attributename]);
-          }
-       }
-       return res.send("Did not found lift by Id" + liftId);
-    });
+  var request = require("request");
+  var options = {
+    method: "GET",
+    url: "https://hack.myport.guide/lift/",
+    headers: {
+      Accept: "application/json",
+    },
+  };
+  request(options, function (error, response) {
+    if (error) throw new Error(error);
+    var json = JSON.parse(response.body);
+    for (var attributename in json) {
+      var name = json[attributename].name;
+      console.log("Lift name '" + name + "' found");
+      if (name == liftId) {
+        console.log("Lift Id '" + liftId + "' match name '" + name + "'");
+        return res.send(json[attributename]);
+      }
+    }
+    return res.send("Did not found lift by Id" + liftId);
+  });
 });
 
 // listener
