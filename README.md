@@ -1,21 +1,15 @@
 # Level-Up
 
 ## Prod stage
-https://level-up.app or https://www.level-up.app
-
-## Dev stage
-https://dev.level-up.app/
-
-## Backend
-https://backend.level-up.app/
+Scan a Bar Code in a Schindler elevator or visit https://level-up.app / https://www.level-up.app
 
 ## What is level up
 
 We want to add QR code stickers in all Schindler lift worldwide. Customer can scan these and be remotely
 connected to another lift user in the world for the duration of a game, or just to say Hi for 4 seconds.
 
-Winning a game, or traveling (vertical miles) entitled you to a Casper LevelUp token, that can be later exchange
-in Schindler partner network.
+Winning a game, or traveling (vertical miles) entitled you to a Ethereum LevelUp token, that can be later exchange
+in Schindler partner network (coupon, loyalty point in local shop around the elevator).
 
 # Schindler challenge
 
@@ -33,10 +27,26 @@ to interact in different ways with our products!
 
 Visit hack.schindler.com (to be published soon) for further details.
 
-# Install developer
-git clone https://github.com/CM2P/schindler.git
+# How to for developer
+`git clone https://github.com/CM2P/schindler.git`
+then
+```
+cd backend
 npm install
 node server.js
+```
+and
+```
+cd web
+npm install
+npm run start
+```
+
+## Dev stage
+https://dev.level-up.app/
+
+## Backend
+https://backend.level-up.app/
 
 # Runtime
 get an AWS server with ubuntu 22.04 LTS
