@@ -1,4 +1,9 @@
-# Schindler
+# Level-Up
+
+https://level-up.app
+https://www.level-up.app
+
+# Schindler challenge
 
 A passenger's journey goes beyond the elevator trip, there is much more than going up & down. It's about moving from A
 to B in a seamless flow without any obstacles. Join us on our journey in elevating passenger experience to the next
@@ -97,6 +102,12 @@ server {
     return 404; # managed by Certbot
 }
 ```
+
+The Certbot packages on your system come with a cron job or systemd timer that will 
+renew your certificates automatically before they expire.
+
+
+
 
 # Face api AI
 https://justadudewhohacks.github.io/face-api.js/docs/index.html
