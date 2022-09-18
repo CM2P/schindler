@@ -37,10 +37,6 @@
         </div>
         <div class="game-container">
           <div class="player">
-            <h2 class="player-headline">
-              <span class="nick">You</span>
-              <span class="score" id="score1">0</span>
-            </h2>
             <div class="player-container">
               <video id="player-video" class="player-video" playsinline></video>
 
@@ -63,25 +59,51 @@
                     id="timer-ring-circle"
                     class="timer-ring-circle"
                     stroke-width="6"
-                    stroke="blue"
+                    stroke="#5729A3"
                     fill="transparent"
                     r="38"
                     cx="50"
                     cy="50"
                   />
                 </svg>
+
+                <span class="score" id="score1">0</span>
               </div>
             </div>
           </div>
 
           <div class="player">
-            <h2 class="player-headline">
-              <span class="nick">Remote</span>
-              <span class="score" id="score2">0</span>
-            </h2>
-            <div class="remote-container">
+            <div class="player-container remote-container">
               <video id="remote-video" class="remote-video" playsinline autoplay></video>
-              <div id="remote-hand" class="remote-hand"></div>
+              <div class="player-hand-container remote-hand-container">
+                <!-- shows the current recognized gesture -->
+                <div id="remote-hand" class="player-hand"></div>
+
+                <!-- show the timer progress -->
+                <svg id="timer-ring" class="timer-ring" height="100" width="100">
+                  <circle
+                    class="timer-ring-circle"
+                    stroke-width="6"
+                    stroke="white"
+                    fill="transparent"
+                    r="38"
+                    cx="50"
+                    cy="50"
+                  />
+                  <circle
+                    id="timer-ring-circle"
+                    class="timer-ring-circle"
+                    stroke-width="6"
+                    stroke="#DC0000"
+                    fill="transparent"
+                    r="38"
+                    cx="50"
+                    cy="50"
+                  />
+                </svg>
+
+                <span class="score" id="score2">0</span>
+              </div>
             </div>
           </div>
 
