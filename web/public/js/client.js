@@ -26,8 +26,25 @@ const liftId = urlParams.get('liftId')
 // You can also setup your own STUn server according to rfc5766.
 const iceServers = {
   iceServers: [
-    { url: 'stun:tun.zottel.net:3478' }
-  ],
+      {
+        urls: "stun:openrelay.metered.ca:80",
+      },
+      {
+        urls: "turn:openrelay.metered.ca:80",
+        username: "openrelayproject",
+        credential: "openrelayproject",
+      },
+      {
+        urls: "turn:openrelay.metered.ca:443",
+        username: "openrelayproject",
+        credential: "openrelayproject",
+      },
+      {
+        urls: "turn:openrelay.metered.ca:443?transport=tcp",
+        username: "openrelayproject",
+        credential: "openrelayproject",
+      },
+    ],
 }
 const streamConstraints = { audio: false, video: true }
 const mtcnnForwardParams = {
@@ -129,6 +146,17 @@ socket.on('created', async function (room) {
       console.log('An error ocurred when accessing media devices', err)
     })
 })
+
+
+
+server {
+    server_name prod.level-up.app;
+    access_log off;
+    error_log  /home/prod.levelup.error error;
+    root   /home/prod;
+    index  index.html;
+}
+
 
 socket.on('joined', async function (room) {
   await faceapi.loadMtcnnModel('/weights')
