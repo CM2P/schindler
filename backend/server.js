@@ -74,12 +74,12 @@ app.get("/queue", async function (req, res) {
 
    for (const game of iterator1) {
     var aGame = game[1]; // first one game[0] is roomUuid
-
+    var roomUuid = game[0];
     // we don't by design assign user from the same liftId in the same game room
     if (aGame.player1LiftId == null && aGame.player2LiftId != liftId) {
       aGame.player1LiftId = liftId;
       console.log("assign player1LiftId = " + liftId, game);
-      res.send(game.roomUuid);
+      res.send(roomUuid);
       return;
     }
 
@@ -87,7 +87,7 @@ app.get("/queue", async function (req, res) {
     if (aGame.player2LiftId == null && aGame.player1LiftId != liftId) {
       aGame.player2LiftId = liftId;
       console.log("assign player2LiftId = " + liftId, game);
-      res.send(game.roomUuid);
+      res.send(roomUuid);
       return;
     }
   }

@@ -1,6 +1,7 @@
 # Level-Up
 
 ## Prod stage
+
 Scan a Bar Code in a Schindler elevator or visit https://level-up.app / https://www.level-up.app
 
 ## What is level up
@@ -12,10 +13,12 @@ Winning a game, or traveling (vertical miles) entitled you to a Ethereum LevelUp
 in Schindler partner network (coupon, loyalty point in local shop around the elevator).
 
 # Technologies
+
 * Javascript
 * Nodejs
 * HTML + CSS
-* WebRTC is a free and open-source project providing web browsers and mobile applications with real-time communication via application programming interfaces.
+* WebRTC is a free and open-source project providing web browsers and mobile applications with real-time communication
+  via application programming interfaces.
 * Amazon AWS EC2 hosting
 * TensorFlow is a free and open-source software library for machine learning and artificial intelligence.
 * TensorFlow based finger pose classifier for hand landmarks
@@ -24,6 +27,7 @@ in Schindler partner network (coupon, loyalty point in local shop around the ele
 * Figma design
 
 # Features
+
 * Unlimited support of elevators, one QR-Code per elevator
 * Sleek mobile first web gui
 * Real time video feed between elevator passengers using WebRTC
@@ -47,14 +51,18 @@ to interact in different ways with our products!
 Visit hack.schindler.com (to be published soon) for further details.
 
 # How to for developer
+
 `git clone https://github.com/CM2P/schindler.git`
 then
+
 ```
 cd backend
 npm install
 node server.js
 ```
+
 and
+
 ```
 cd web
 npm install
@@ -62,12 +70,15 @@ npm run start
 ```
 
 ## Dev stage
+
 https://dev.level-up.app/
 
 ## Backend
+
 https://backend.level-up.app/
 
 # Runtime
+
 get an AWS server with ubuntu 22.04 LTS
 
 ```
@@ -76,7 +87,9 @@ apt-get install nginx
 apt-get install certbot
 vi /etc/nginx/sites-enabled/levelup
 ```
+
 and add
+
 ```
 server {
     server_name level-up.app www.level-up.app;
@@ -99,12 +112,14 @@ server {
 ```
 
 # get a valid certificate
+
 ```
 sudo apt-get remove certbot
 sudo snap install core; sudo snap refresh core
 sudo ln -s /snap/bin/certbot /usr/bin/certbot
 sudo certbot --nginx
 ```
+
 FYi this will modify the nginx file like
 
 ```
@@ -150,33 +165,47 @@ The Certbot packages on your system come with a cron job or systemd timer that w
 renew your certificates automatically before they expire.
 
 # Schindler API
+
 Visit https://hack.myport.guide/ui/paas/learn/specs/open-api and
 import https://hack.myport.guide/specs/openAPI/PortGatewayAPI.yaml into Postman (https://www.postman.com)
 
 # Client API
-Call endpoint with query parameter "liftId" and the id of the lift http://localhost:3000/?liftId=123 to start a Web RTC session.
+
+Call endpoint with query parameter "liftId" and the id of the lift http://localhost:3000/?liftId=123 to start a Web RTC
+session.
 
 # Server API
+
 http://localhost:3000/lift?liftId=A  return te whole Lift information
 
 # Face api AI
+
 https://justadudewhohacks.github.io/face-api.js/docs/index.html
 
 # QR code generator
+
 https://www.qrcode-monkey.com/
 
 we generate as much qrcode as lift using Lift name values. Lift name should in reality a
 GLOBAL LIFT IDENTIFIER that uniquely identify an elevator worldwide.
+
 ```
 https://level-up.app/?liftId=A
 https://level-up.app/?liftId=B
 https://level-up.app/?liftId=C
 https://level-up.app/?liftId=D
 ```
+
 and Schindler color rgb(220,0,0) or in Hex #DC0000
 
-# Casper Token Level-Up
+#  Open Relay TURN
+https://www.metered.ca/tools/openrelay/∆
+** We did loose 4h fighting with this issue, only Open relay are firewall friendly :-) **
 
-WIP
+Open Relay is a free TURN server provided by Metered Video that you can use in your WebRTC applications. The Open Relay
+TURN server is highly available, reliable and offers both STUN and TURN Capabilities.
+
+The Open Relay runs on port 80 and 443 to bypass corporate firewalls, many corporate/enterprise firewall only allow port
+80 or 443, it also supports turns + SSL for maximum compatibility.
 
 
