@@ -65,7 +65,7 @@ async function getFace(localVideo, options) {
   results = await faceapi.mtcnn(localVideo, options)
 }
 
-const hostname = window.location.hostname.replace('dev', 'backend')
+const hostname = window.location.hostname.replace('dev', 'backend').replace('prod', 'backend')
 const port = window.location.hostname === 'localhost' ? ':3000' : ''
 
 const apiUrl = `${window.location.protocol}//${hostname}${port}`
@@ -204,22 +204,21 @@ socket.on('candidate', function (event) {
     candidate: event.candidate,
   })
   rtcPeerConnection.addIceCandidate(candidate)
-
 })
 
 socket.on('ready', function () {
-console.log("socket ready!");
+  console.log('socket ready!')
   if (isCaller) {
-    console.log("ready isCaller!");
+    console.log('ready isCaller!')
     rtcPeerConnection = new RTCPeerConnection(iceServers)
     rtcPeerConnection.onicecandidate = onIceCandidate
 
     // Listen for connectionstatechange on the local RTCPeerConnection
-    rtcPeerConnection.addEventListener('connectionstatechange', event => {
-        if (rtcPeerConnection.connectionState === 'connected') {
-            console.log("Peers connected!");
-        }
-    });
+    rtcPeerConnection.addEventListener('connectionstatechange', (event) => {
+      if (rtcPeerConnection.connectionState === 'connected') {
+        console.log('Peers connected!')
+      }
+    })
 
     rtcPeerConnection.onaddstream = onAddStream
     rtcPeerConnection.addStream(localStream)
@@ -230,9 +229,9 @@ console.log("socket ready!");
 })
 
 socket.on('offer', function (event) {
-console.log("offer");
+  console.log('offer')
   if (!isCaller) {
-    console.log("offer isCaller");
+    console.log('offer isCaller')
     rtcPeerConnection = new RTCPeerConnection(iceServers)
     rtcPeerConnection.onicecandidate = onIceCandidate
     rtcPeerConnection.onaddstream = onAddStream
