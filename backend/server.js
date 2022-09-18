@@ -73,26 +73,28 @@ app.get("/queue", async function(req, res) {
   var arrayLength = games.length;
   for (var i = 0; i < arrayLength; i++) {
       var game = games[i];
-      console.log("Examining ", game);
+      //console.log("Examining ", game);
 
       // we don't by design assign user from the dsame liftId in the same game room
       if (game.player1LiftId == null
           && game.player2LiftId != liftId) {
         game.player1LiftId = liftId;
-        console.log("assign player1LiftId = " + liftId, game);
-        return game.roomUuid;
+        //console.log("assign player1LiftId = " + liftId, game);
+        res.send(game.roomUuid);
+        return;
       }
 
       // we don't by design assign user from the dsame liftId in the same game room
       if (game.player2LiftId == null
           && game.player1LiftId != liftId) {
         game.player2LiftId = liftId;
-        console.log("assign player2LiftId = " + liftId, game);
-        return game.roomUuid;
+        //console.log("assign player2LiftId = " + liftId, game);
+        res.send(game.roomUuid);
+        return;
       }
   }
 
-   var newGame = createGame(uuid.v4(), liftId, null, null, null);
+   var newGame = await createGame(uuid.v4(), liftId, null, null, null);
    console.log("found no room with a player1/2 slot empty, create a new game and room", newGame);
 
    games.push(newGame);
