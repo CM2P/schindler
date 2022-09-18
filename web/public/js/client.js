@@ -180,7 +180,9 @@ socket.on('candidate', function (event) {
 })
 
 socket.on('ready', function () {
+console.log("socket ready!");
   if (isCaller) {
+    console.log("ready isCaller!");
     rtcPeerConnection = new RTCPeerConnection(iceServers)
     rtcPeerConnection.onicecandidate = onIceCandidate
 
@@ -200,7 +202,9 @@ socket.on('ready', function () {
 })
 
 socket.on('offer', function (event) {
+console.log("offer");
   if (!isCaller) {
+    console.log("offer isCaller");
     rtcPeerConnection = new RTCPeerConnection(iceServers)
     rtcPeerConnection.onicecandidate = onIceCandidate
     rtcPeerConnection.onaddstream = onAddStream
