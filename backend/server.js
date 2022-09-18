@@ -17,6 +17,7 @@ const corsOption = {
   origin: [
     "http://localhost:8080",
     "https://dev.level-up.app",
+    "https://prod.level-up.app",
     "https://level-up.app",
   ],
 };
