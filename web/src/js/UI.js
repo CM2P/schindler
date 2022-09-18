@@ -32,9 +32,12 @@ export const UI = {
 
   stopCountdown: function () {
     $countdown.classList.add('fade-out')
+    $countdown.style.opacity = 0
   },
 
   startCountdown: async function () {
+    $countdown.classList.add('fade-in')
+    $countdown.style.opacity = 1
     return new Promise((resolve) => {
       this.setCountdown(3)
       setTimeout(() => {
