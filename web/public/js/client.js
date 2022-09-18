@@ -147,17 +147,6 @@ socket.on('created', async function (room) {
     })
 })
 
-
-
-server {
-    server_name prod.level-up.app;
-    access_log off;
-    error_log  /home/prod.levelup.error error;
-    root   /home/prod;
-    index  index.html;
-}
-
-
 socket.on('joined', async function (room) {
   await faceapi.loadMtcnnModel('/weights')
   await faceapi.loadFaceRecognitionModel('/weights')
