@@ -26,6 +26,7 @@ const liftId = urlParams.get('liftId')
 // You can also setup your own STUn server according to rfc5766.
 const iceServers = {
   iceServers: [{ url: 'stun:stun.l.google.com:19302' }],
+  iceTransportPolicy: 'relay',
 }
 const streamConstraints = { audio: false, video: true }
 const mtcnnForwardParams = {
