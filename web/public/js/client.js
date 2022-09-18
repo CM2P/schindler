@@ -26,8 +26,11 @@ const liftId = urlParams.get('liftId')
 // You can also setup your own STUn server according to rfc5766.
 const iceServers = {
   iceServers: [
-    { url: 'stun:mtcnnRstun.services.mozilla.com' },
     { url: 'stun:stun.l.google.com:19302' },
+    { url: 'stun:stun1.l.google.com:19302' },
+    { url: 'stun:stun2.l.google.com:19302' },
+    { url: 'stun:stun3.l.google.com:19302' },
+    { url: 'stun:stun4.l.google.com:19302' }
   ],
 }
 const streamConstraints = { audio: false, video: true }
