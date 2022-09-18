@@ -72,30 +72,37 @@ app.get("/queue", async function (req, res) {
   // complexity grow with O(log n) not ready for production :-)
   var arrayLength = games.length;
   for (var i = 0; i < arrayLength; i++) {
-      var game = games[i];
-      //console.log("Examining ", game);
+    var game = games[i];
+    //console.log("Examining ", game);
 
-      // we don't by design assign user from the dsame liftId in the same game room
-      if (game.player1LiftId == null
-          && game.player2LiftId != liftId) {
-        game.player1LiftId = liftId;
-        //console.log("assign player1LiftId = " + liftId, game);
-        res.send(game.roomUuid);
-        return;
-      }
+    // we don't by design assign user from the dsame liftId in the same game room
+    if (game.player1LiftId == null && game.player2LiftId != liftId) {
+      game.player1LiftId = liftId;
+      //console.log("assign player1LiftId = " + liftId, game);
+      res.send(game.roomUuid);
+      return;
+    }
 
-      // we don't by design assign user from the dsame liftId in the same game room
-      if (game.player2LiftId == null
-          && game.player1LiftId != liftId) {
-        game.player2LiftId = liftId;
-        //console.log("assign player2LiftId = " + liftId, game);
-        res.send(game.roomUuid);
-        return;
-      }
+    // we don't by design assign user from the dsame liftId in the same game room
+    if (game.player2LiftId == null && game.player1LiftId != liftId) {
+      game.player2LiftId = liftId;
+      //console.log("assign player2LiftId = " + liftId, game);
+      res.send(game.roomUuid);
+      return;
+    }
   }
 
-   var newGame = await createGame(uuid.v4(), liftId, null, null, null);
-   console.log("found no room with a player1/2 slot empty, create a new game and room", newGame);
+  var newGame = await createGame(
+    uuid.v4().replace("-", ""),
+    liftId,
+    null,
+    null,
+    null
+  );
+  console.log(
+    "found no room with a player1/2 slot empty, create a new game and room",
+    newGame
+  );
 
   games.push(newGame);
 
@@ -167,6 +174,8 @@ function createGame(
   let statusText = null;
   let player1Wins = false;
   let player2Wins = false;
+  var player1Score = 0;
+  var player2Score = 0;
 
   if (
     player1Gesture == player2Gesture &&
@@ -205,10 +214,10 @@ function createGame(
   }
 
   if (player1Wins) {
-    playerScore++;
+    player1Score++;
     statusText += " - You win!";
   } else if (player2Wins) {
-    remoteScore++;
+    player2Score++;
     statusText += " - The other wins!";
   }
 
@@ -221,6 +230,8 @@ function createGame(
     statusText,
     player1Gesture,
     player2Gesture,
+    player1Score,
+    player2Score,
   };
 }
 

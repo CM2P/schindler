@@ -3,7 +3,7 @@ var remoteVideo = document.getElementById('remote-video')
 var canvas = document.getElementById('player-video')
 
 // variables
-var roomNumber
+var roomUuid
 var localStream
 var remoteStream
 var rtcPeerConnection
@@ -60,8 +60,8 @@ var socket = io(apiUrl)
 async function getRoomUuid(liftId) {
   const result = await fetch(`${apiUrl}/queue?liftId=${liftId}`)
   if (result.ok) {
-    var roomUuid = await result.text()
-    socket.emit('create or join', roomNumber)
+    roomUuid = await result.text()
+    socket.emit('create or join', roomUuid)
 
     return roomUuid
   } else {
@@ -164,7 +164,7 @@ socket.on('joined', async function (room) {
       })
 
       localStream = canvas.captureStream(30)
-      socket.emit('ready', roomNumber)
+      socket.emit('ready', roomUuid)
     })
     .catch(function (err) {
       console.log('An error ocurred when accessing media devices', err)
@@ -217,7 +217,7 @@ function onIceCandidate(event) {
       label: event.candidate.sdpMLineIndex,
       id: event.candidate.sdpMid,
       candidate: event.candidate.candidate,
-      room: roomNumber,
+      room: roomUuid,
     })
   }
 }
@@ -232,7 +232,7 @@ function setLocalAndOffer(sessionDescription) {
   socket.emit('offer', {
     type: 'offer',
     sdp: sessionDescription,
-    room: roomNumber,
+    room: roomUuid,
   })
 }
 
@@ -241,6 +241,6 @@ function setLocalAndAnswer(sessionDescription) {
   socket.emit('answer', {
     type: 'answer',
     sdp: sessionDescription,
-    room: roomNumber,
+    room: roomUuid,
   })
 }
