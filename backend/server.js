@@ -1,7 +1,7 @@
 //requires
 const express = require("express");
 const app = express();
-const uuid = require('uuid');
+const uuid = require("uuid");
 
 var http = require("http").Server(app);
 var io = require("socket.io")(http);
@@ -65,140 +65,163 @@ io.on("connection", function (socket) {
 // queue user
 // http://localhost:3000/queue/?liftId=A
 // return a new game room with game status
-app.get("/queue", async function(req, res) {
+app.get("/queue", async function (req, res) {
   const liftId = req.query.liftId;
 
   // pairing to another random user in queue but never in the same room
   // complexity grow with O(log n) not ready for production :-)
   var arrayLength = games.length;
   for (var i = 0; i < arrayLength; i++) {
-      var game = games[i];
-      console.log("Examining ", game);
+    var game = games[i];
+    console.log("Examining ", game);
 
-      // we don't by design assign user from the dsame liftId in the same game room
-      if (game.player1LiftId == null
-          && game.player2LiftId != liftId) {
-        game.player1LiftId = liftId;
-        console.log("assign player1LiftId = " + liftId, game);
-        return game.roomUuid;
-      }
+    // we don't by design assign user from the dsame liftId in the same game room
+    if (game.player1LiftId == null && game.player2LiftId != liftId) {
+      game.player1LiftId = liftId;
+      console.log("assign player1LiftId = " + liftId, game);
+      return game.roomUuid;
+    }
 
-      // we don't by design assign user from the dsame liftId in the same game room
-      if (game.player2LiftId == null
-          && game.player1LiftId != liftId) {
-        game.player2LiftId = liftId;
-        console.log("assign player2LiftId = " + liftId, game);
-        return game.roomUuid;
-      }
+    // we don't by design assign user from the dsame liftId in the same game room
+    if (game.player2LiftId == null && game.player1LiftId != liftId) {
+      game.player2LiftId = liftId;
+      console.log("assign player2LiftId = " + liftId, game);
+      return game.roomUuid;
+    }
   }
 
-   var newGame = createGame(uuid.v4(), liftId, null, null, null);
-   console.log("found no room with a player1/2 slot empty, create a new game and room", newGame);
+  var newGame = createGame(uuid.v4(), liftId, null, null, null);
+  console.log(
+    "found no room with a player1/2 slot empty, create a new game and room",
+    newGame
+  );
 
-   games.push(newGame);
+  games.push(newGame);
 
-   res.send(newGame.roomUuid);
+  res.send(newGame.roomUuid);
 });
 
 function getGameByRoomUuid(roomUuid) {
   var arrayLength = games.length;
   for (var i = 0; i < arrayLength; i++) {
-      var game = games[i];
-      //console.log("Examining ", game);
+    var game = games[i];
+    //console.log("Examining ", game);
 
-      // we don't by design assign user from the dsame liftId in the same game room
-      if (game.roomUuid == roomUuid) {
-          return game;
-      }
+    // we don't by design assign user from the dsame liftId in the same game room
+    if (game.roomUuid == roomUuid) {
+      return game;
+    }
   }
-   return null;
+  return null;
 }
 
 // testing
 // http://localhost:3000/player/?roomUuid=a98416b4-139f-4455-b093-677ef246e216&liftId=A&playerGesture=rock
 // http://localhost:3000/player/?roomUuid=a98416b4-139f-4455-b093-677ef246e216&liftId=C&playerGesture=rock
-app.get("/player", async function(req, res) {
+app.get("/player", async function (req, res) {
   const roomUuid = req.query.roomUuid;
   const liftId = req.query.liftId;
   const playerGesture = req.query.playerGesture;
 
-  console.log(roomUuid + " liftId " + liftId + " player played " + playerGesture);
+  console.log(
+    roomUuid + " liftId " + liftId + " player played " + playerGesture
+  );
 
   var results = null;
   var game = getGameByRoomUuid(roomUuid);
-  if (game != null)  {
-      console.log("found game", game);
+  if (game != null) {
+    console.log("found game", game);
 
-      if (game.player1LiftId == liftId) {
-        game.player1Gesture = playerGesture;
-        console.log("was player 1 playing "+playerGesture+" in game", game);
-      } else {
-        game.player2Gesture = playerGesture;
-        console.log("was player 2 playing "+playerGesture+" in game", game);
-      }
+    if (game.player1LiftId == liftId) {
+      game.player1Gesture = playerGesture;
+      console.log("was player 1 playing " + playerGesture + " in game", game);
+    } else {
+      game.player2Gesture = playerGesture;
+      console.log("was player 2 playing " + playerGesture + " in game", game);
+    }
 
-      if (game.player1Gesture != null && game.player2Gesture != null)  {
+    if (game.player1Gesture != null && game.player2Gesture != null) {
+      var results = createGame(
+        roomUuid,
+        game.player1LiftId,
+        game.player2LiftId,
+        game.player1Gesture,
+        game.player2Gesture
+      );
+      console.log(roomUuid + " both player played, checking result", results);
 
-       var results  = createGame(roomUuid, game.player1LiftId, game.player2LiftId, game.player1Gesture, game.player2Gesture);
-       console.log(roomUuid + " both player played, checking result", results);
-
-       delete games.roomUuid;
-      }
+      delete games.roomUuid;
+    }
   }
-  res.send(results);
+  res.send(JSON.stringify(results));
 });
 
-function createGame(roomUuid, player1LiftId, player2LiftId, player1Gesture, player2Gesture) {
+function createGame(
+  roomUuid,
+  player1LiftId,
+  player2LiftId,
+  player1Gesture,
+  player2Gesture
+) {
   let statusText = null;
-  let player1Wins = false
-  let player2Wins = false
+  let player1Wins = false;
+  let player2Wins = false;
 
-  if (player1Gesture == player2Gesture
-  && player1Gesture != null
-  && player2Gesture != null) {
+  if (
+    player1Gesture == player2Gesture &&
+    player1Gesture != null &&
+    player2Gesture != null
+  ) {
     // draw
-    statusText = "It's a draw!"
+    statusText = "It's a draw!";
   } else {
     // check whinner
-    if (player1Gesture == 'rock') {
-      if (player2Gesture == 'scissors') {
-        player1Wins = true
-        statusText = 'Rock beats scissors'
+    if (player1Gesture == "rock") {
+      if (player2Gesture == "scissors") {
+        player1Wins = true;
+        statusText = "Rock beats scissors";
       } else {
-        player2Wins = true
-        statusText = 'Paper beats rock'
+        player2Wins = true;
+        statusText = "Paper beats rock";
       }
-    } else if (player1Gesture == 'paper') {
-      if (player2Gesture == 'rock') {
-        player1Wins = true
-        statusText = 'Paper beats rock'
+    } else if (player1Gesture == "paper") {
+      if (player2Gesture == "rock") {
+        player1Wins = true;
+        statusText = "Paper beats rock";
       } else {
-        player2Wins = true
-        statusText = 'Scissors beat paper'
+        player2Wins = true;
+        statusText = "Scissors beat paper";
       }
-    } else if (player1Gesture == 'scissors') {
-      if (player2Gesture == 'paper') {
-        player1Wins = true
-        statusText = 'Scissors beat paper'
+    } else if (player1Gesture == "scissors") {
+      if (player2Gesture == "paper") {
+        player1Wins = true;
+        statusText = "Scissors beat paper";
       } else {
-        player2Wins = true
-        statusText = 'Rock beats scissors'
+        player2Wins = true;
+        statusText = "Rock beats scissors";
       }
     }
   }
 
   if (player1Wins) {
-    playerScore++
-    statusText += ' - You win!'
+    playerScore++;
+    statusText += " - You win!";
   } else if (player2Wins) {
-    remoteScore++
-    statusText += ' - The other wins!'
+    remoteScore++;
+    statusText += " - The other wins!";
   }
 
-  return {roomUuid, player1LiftId, player2LiftId, player1Wins, player2Wins, statusText, player1Gesture, player2Gesture};
+  return {
+    roomUuid,
+    player1LiftId,
+    player2LiftId,
+    player1Wins,
+    player2Wins,
+    statusText,
+    player1Gesture,
+    player2Gesture,
+  };
 }
-
-
 
 app.get("/lift", async function (req, res) {
   var liftId = req.query.liftId;

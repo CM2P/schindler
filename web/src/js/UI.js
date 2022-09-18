@@ -59,7 +59,7 @@ export const UI = {
     $timerRingCircle.style.strokeDashoffset = offset
   },
 
-  setPlayerHand: function (gesture) {
+  setPlayerGesture: function (gesture) {
     switch (gesture) {
       case 'rock':
         $playerHand.textContent = '✊'

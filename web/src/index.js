@@ -20,7 +20,7 @@ var roomUuid = null
 
 // setup & initialization
 async function onInit() {
-  roomUuid = getRoomUuid(liftId)
+  roomUuid = await getRoomUuid(liftId)
 
   UI.init()
 
@@ -51,7 +51,7 @@ async function playOneRound() {
   // hide the timer circle
   UI.showTimer(false)
   UI.setTimerProgress(0)
-  UI.setPlayerHand('')
+  UI.setPlayerGesture('')
 
   // ready - set - show
   // wait for countdown to finish
@@ -84,12 +84,12 @@ function detectPlayerGesture(requiredDuration) {
           } else {
             // detected a different gesture
             // -> reset timer
-            UI.setPlayerHand(playerGesture)
+            UI.setPlayerGesture(playerGesture)
             lastGesture = playerGesture
             gestureDuration = 0
           }
         } else {
-          UI.setPlayerHand(false)
+          UI.setPlayerGesture(false)
           lastGesture = ''
           gestureDuration = 0
         }
@@ -117,8 +117,11 @@ function detectPlayerGesture(requiredDuration) {
   predictNonblocking()
 }
 
-function checkResult(playerGesture) {
-  var game = play(liftId, roomUuid, playerGesture)
+async function checkResult(playerGesture) {
+  var game = await play(liftId, roomUuid, playerGesture)
+  var statusText
+  var playerGesture
+  var remoteGesture
 
   if (game.player1Wins) {
     player1Score++
@@ -127,6 +130,15 @@ function checkResult(playerGesture) {
   }
   statusText += game.statusText
 
+  if (liftId === game.player1LiftId) {
+    playerGesture = game.player1Gesture
+    remoteGesture = game.player2Gesture
+  } else {
+    playerGesture = game.player2Gesture
+    remoteGesture = game.player1Gesture
+  }
+
+  UI.setPlayerGesture(playerGesture)
   UI.showRemoteHand(true)
   UI.setRemoteGesture(remoteGesture)
 
