@@ -26,11 +26,7 @@ const liftId = urlParams.get('liftId')
 // You can also setup your own STUn server according to rfc5766.
 const iceServers = {
   iceServers: [
-    { url: 'stun:stun.l.google.com:19302' },
-    { url: 'stun:stun1.l.google.com:19302' },
-    { url: 'stun:stun2.l.google.com:19302' },
-    { url: 'stun:stun3.l.google.com:19302' },
-    { url: 'stun:stun4.l.google.com:19302' }
+    { url: 'stun:tun.zottel.net:3478' }
   ],
 }
 const streamConstraints = { audio: false, video: true }
@@ -180,12 +176,21 @@ socket.on('candidate', function (event) {
     candidate: event.candidate,
   })
   rtcPeerConnection.addIceCandidate(candidate)
+
 })
 
 socket.on('ready', function () {
   if (isCaller) {
     rtcPeerConnection = new RTCPeerConnection(iceServers)
     rtcPeerConnection.onicecandidate = onIceCandidate
+
+    // Listen for connectionstatechange on the local RTCPeerConnection
+    peerConnection.addEventListener('connectionstatechange', event => {
+        if (peerConnection.connectionState === 'connected') {
+            console.log("Peers connected!");
+        }
+    });
+
     rtcPeerConnection.onaddstream = onAddStream
     rtcPeerConnection.addStream(localStream)
     rtcPeerConnection.createOffer(setLocalAndOffer, function (e) {
