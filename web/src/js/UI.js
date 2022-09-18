@@ -14,11 +14,24 @@ const $timerRing = document.querySelector('#timer-ring')
 const $timerRingCircle = document.querySelector('#timer-ring-circle')
 const radius = $timerRingCircle.r.baseVal.value
 const circumference = radius * 2 * Math.PI
+const a=new AudioContext() // browsers limit the number of concurrent audio contexts, so you better re-use'em
 
 export const UI = {
   init: function () {
     this.initTimerCircle()
     this.showTimer(false)
+  },
+
+   beep: function(vol, freq, duration){
+    v=a.createOscillator()
+    u=a.createGain()
+    v.connect(u)
+    v.frequency.value=freq
+    v.type="square"
+    u.connect(a.destination)
+    u.gain.value=vol*0.01
+    v.start(a.currentTime)
+    v.stop(a.currentTime+duration*0.001)
   },
 
   initTimerCircle: function () {
@@ -40,14 +53,18 @@ export const UI = {
     $countdown.style.opacity = 1
     return new Promise((resolve) => {
       this.setCountdown(3)
+      this.beep(100, 520, 200)
       setTimeout(() => {
         this.setCountdown(2)
+        this.beep(100, 520, 200)
       }, 1000)
       setTimeout(() => {
         this.setCountdown(1)
+        this.beep(100, 520, 200)
       }, 2000)
       setTimeout(() => {
         this.stopCountdown()
+        this.beep(100, 520, 400)
         resolve()
       }, 3000)
     })
