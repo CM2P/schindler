@@ -70,13 +70,12 @@ app.get("/queue", async function (req, res) {
   const liftId = req.query.liftId;
 
   // pairing to another random user in queue but never in the same room
-  // complexity grow with O(log n) not ready for production :-)
    const iterator1 = games[Symbol.iterator]();
 
    for (const game of iterator1) {
-    var aGame = game[1]; // first one is roomUuid
+    var aGame = game[1]; // first one game[0] is roomUuid
 
-    // we don't by design assign user from the dsame liftId in the same game room
+    // we don't by design assign user from the same liftId in the same game room
     if (aGame.player1LiftId == null && aGame.player2LiftId != liftId) {
       aGame.player1LiftId = liftId;
       console.log("assign player1LiftId = " + liftId, game);
