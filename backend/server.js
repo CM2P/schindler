@@ -114,11 +114,7 @@ function getGameByRoomUuid(roomUuid) {
   console.log("getGameByRoomUuid ", game);
 
   // we don't by design assign user from the dsame liftId in the same game room
-  if (game.roomUuid == roomUuid) {
-    return game;
-  }
-
-  return null;
+  return game;
 }
 
 // testing
