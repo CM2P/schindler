@@ -1,5 +1,9 @@
+@font-face {
+  font-family: 'Euclid Circular B';
+  src: url('../fonts/8BITWONDERNominal.woff');
+}
+
 $font-size: 1rem;
-$font-family: 'Courier New', Courier, monospace;
-$background-color: #121212;
+$font-family: 'Euclid Circular B', Courier, monospace;
 $font-color: #dae0e0;
 $page-width: 650px;

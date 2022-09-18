@@ -6,7 +6,6 @@ import { Prediction } from './js/Prediction'
 
 import camConfig from '@/js/CameraConfig'
 
-
 // store a reference to the player video
 var playerVideo
 
@@ -17,14 +16,13 @@ var player1Score = 0,
 const urlParams = new URLSearchParams(window.location.search)
 const liftId = urlParams.get('liftId')
 
-var roomUuid = null;
+var roomUuid = null
 
 // setup & initialization
 async function onInit() {
-  roomUuid =  getRoomUuid(liftId);
+  roomUuid = await getRoomUuid(liftId)
 
   UI.init()
-  UI.setStatusMessage('Initializing - Please wait a moment')
 
   const videoPromise = UI.initPlayerVideo(camConfig)
   const predictPromise = Prediction.init()
@@ -38,43 +36,22 @@ async function onInit() {
 
     console.log('Initialization finished')
 
-    // game is ready
-    waitForPlayer()
+    UI.transitionToSecondPage()
+
+    // start game
+    playOneRound()
   })
 }
 //-----
 
 // game logic
 // -----------------------------------------------------------------------------
-function waitForPlayer() {
-  // show a blinking start message
-  if (UI.isMobile()) {
-    UI.setStatusMessage('Touch the screen to start')
-  } else {
-    UI.setStatusMessage('Press any key to start')
-  }
-
-  UI.startAnimateMessage()
-
-  const startGame = () => {
-    UI.stopAnimateMessage()
-    playOneRound()
-  }
-
-  // wait for player to press any key
-  // then stop blinking and play one round
-  if (UI.isMobile()) {
-    document.addEventListener('touchstart', startGame, { once: true })
-  } else {
-    window.addEventListener('keypress', startGame, { once: true })
-  }
-}
 
 async function playOneRound() {
   // hide the timer circle
   UI.showTimer(false)
   UI.setTimerProgress(0)
-  UI.setPlayerHand('')
+  UI.setPlayerGesture('')
 
   // ready - set - show
   // wait for countdown to finish
@@ -107,12 +84,12 @@ function detectPlayerGesture(requiredDuration) {
           } else {
             // detected a different gesture
             // -> reset timer
-            UI.setPlayerHand(playerGesture)
+            UI.setPlayerGesture(playerGesture)
             lastGesture = playerGesture
             gestureDuration = 0
           }
         } else {
-          UI.setPlayerHand(false)
+          UI.setPlayerGesture(false)
           lastGesture = ''
           gestureDuration = 0
         }
@@ -140,21 +117,30 @@ function detectPlayerGesture(requiredDuration) {
   predictNonblocking()
 }
 
-function checkResult(playerGesture) {
-  var game = play(liftId, roomUuid, playerGesture);
+async function checkResult(playerGesture) {
+  var game = await play(liftId, roomUuid, playerGesture)
+  var statusText
+  var playerGesture
+  var remoteGesture
 
   if (game.player1Wins) {
     player1Score++
-
   } else if (game.player2Wins) {
     player2Score++
   }
-  statusText += game.statusText;
+  statusText += game.statusText
 
+  if (liftId === game.player1LiftId) {
+    playerGesture = game.player1Gesture
+    remoteGesture = game.player2Gesture
+  } else {
+    playerGesture = game.player2Gesture
+    remoteGesture = game.player1Gesture
+  }
+
+  UI.setPlayerGesture(playerGesture)
   UI.showRemoteHand(true)
   UI.setRemoteGesture(remoteGesture)
-
-  UI.setStatusMessage(statusText)
 
   UI.setPlayerScore(player1Score)
   UI.setRemoteScore(player2Score)

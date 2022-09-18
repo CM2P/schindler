@@ -1,6 +1,5 @@
 // getting dom elements
-var divConsultingRoom = document.getElementById('consultingRoom')
-var remoteVideo = document.getElementById('remoteVideo')
+var remoteVideo = document.getElementById('remote-video')
 var canvas = document.getElementById('player-video')
 
 // variables
@@ -59,27 +58,26 @@ const apiUrl = `${window.location.protocol}//${hostname}${port}`
 var socket = io(apiUrl)
 
 async function getRoomUuid(liftId) {
-  fetch(`${apiUrl}/queue?liftId=${liftId}`).then(async (result) => {
-    if (result.ok) {
-      var roomUuid = await result.json()
-      socket.emit('create or join', roomNumber)
-      divConsultingRoom.style = 'display: block;'
+  const result = await fetch(`${apiUrl}/queue?liftId=${liftId}`)
+  if (result.ok) {
+    var roomUuid = await result.text()
+    socket.emit('create or join', roomNumber)
 
-      return roomUuid;
-    } else {
-      alert(result.body)
-    }
-  })
+    return roomUuid
+  } else {
+    alert(result.body)
+  }
 }
 
 async function play(liftId, roomUuid, playerGesture) {
-  fetch(`${apiUrl}/player?liftId=${liftId}&roomUuid=${roomUuid}&playerGesture=${playerGesture}`).then(async (result) => {
-    if (result.ok) {
-      return  await result.json()
-    } else {
-      alert(result.body)
-    }
-  })
+  const result = await fetch(
+    `${apiUrl}/player?liftId=${liftId}&roomUuid=${roomUuid}&playerGesture=${playerGesture}`
+  )
+  if (result.ok) {
+    return result.text()
+  } else {
+    alert(result.body)
+  }
 }
 
 // message handlers
