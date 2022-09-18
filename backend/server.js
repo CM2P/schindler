@@ -118,6 +118,15 @@ function getGameByRoomUuid(roomUuid) {
 }
 
 // testing
+// http://localhost:3000/game/?roomUuid=50656362-ccbf-44e8-81f0-91acbbfe36b4
+app.get("/game", async function (req, res) {
+  const roomUuid = req.query.roomUuid;
+  var game = getGameByRoomUuid(roomUuid);
+  res.send(JSON.stringify(game));
+});
+
+
+// testing
 // http://localhost:3000/player/?liftId=A&playerGesture=rock&roomUuid=a98416b4-139f-4455-b093-677ef246e216
 // http://localhost:3000/player/?liftId=B&playerGesture=rock&roomUuid=a98416b4-139f-4455-b093-677ef246e216
 app.get("/player", async function (req, res) {
