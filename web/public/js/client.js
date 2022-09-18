@@ -24,6 +24,8 @@ const liftId = urlParams.get('liftId')
 
 // There are many stun servers provided by google and other sites which one could use .
 // You can also setup your own STUn server according to rfc5766.
+
+// https://www.metered.ca/tools/openrelay/
 const iceServers = {
   iceServers: [
       {

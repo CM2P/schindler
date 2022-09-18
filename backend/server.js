@@ -7,7 +7,7 @@ var http = require("http").Server(app);
 var io = require("socket.io")(http);
 
 // cache
-const games = [];
+const games = new Map();
 
 // express routing
 app.use(express.static("public"));
@@ -71,30 +71,30 @@ app.get("/queue", async function (req, res) {
 
   // pairing to another random user in queue but never in the same room
   // complexity grow with O(log n) not ready for production :-)
-  var arrayLength = games.length;
-  for (var i = 0; i < arrayLength; i++) {
-    var game = games[i];
-    //console.log("Examining ", game);
+   const iterator1 = games[Symbol.iterator]();
+
+   for (const game of iterator1) {
+    var aGame = game[1]; // first one is roomUuid
 
     // we don't by design assign user from the dsame liftId in the same game room
-    if (game.player1LiftId == null && game.player2LiftId != liftId) {
-      game.player1LiftId = liftId;
-      //console.log("assign player1LiftId = " + liftId, game);
+    if (aGame.player1LiftId == null && aGame.player2LiftId != liftId) {
+      aGame.player1LiftId = liftId;
+      console.log("assign player1LiftId = " + liftId, game);
       res.send(game.roomUuid);
       return;
     }
 
     // we don't by design assign user from the dsame liftId in the same game room
-    if (game.player2LiftId == null && game.player1LiftId != liftId) {
-      game.player2LiftId = liftId;
-      //console.log("assign player2LiftId = " + liftId, game);
+    if (aGame.player2LiftId == null && aGame.player1LiftId != liftId) {
+      aGame.player2LiftId = liftId;
+      console.log("assign player2LiftId = " + liftId, game);
       res.send(game.roomUuid);
       return;
     }
   }
 
   var newGame = await createGame(
-    uuid.v4().replace("-", ""),
+    uuid.v4(),
     liftId,
     null,
     null,
@@ -105,28 +105,26 @@ app.get("/queue", async function (req, res) {
     newGame
   );
 
-  games.push(newGame);
+  games.set(newGame.roomUuid, newGame);
 
   res.send(newGame.roomUuid);
 });
 
 function getGameByRoomUuid(roomUuid) {
-  var arrayLength = games.length;
-  for (var i = 0; i < arrayLength; i++) {
-    var game = games[i];
-    //console.log("Examining ", game);
+  var game = games.get(roomUuid);
+  console.log("getGameByRoomUuid ", game);
 
-    // we don't by design assign user from the dsame liftId in the same game room
-    if (game.roomUuid == roomUuid) {
-      return game;
-    }
+  // we don't by design assign user from the dsame liftId in the same game room
+  if (game.roomUuid == roomUuid) {
+    return game;
   }
+
   return null;
 }
 
 // testing
-// http://localhost:3000/player/?roomUuid=a98416b4-139f-4455-b093-677ef246e216&liftId=A&playerGesture=rock
-// http://localhost:3000/player/?roomUuid=a98416b4-139f-4455-b093-677ef246e216&liftId=C&playerGesture=rock
+// http://localhost:3000/player/?liftId=A&playerGesture=rock&roomUuid=a98416b4-139f-4455-b093-677ef246e216
+// http://localhost:3000/player/?liftId=B&playerGesture=rock&roomUuid=a98416b4-139f-4455-b093-677ef246e216
 app.get("/player", async function (req, res) {
   const roomUuid = req.query.roomUuid;
   const liftId = req.query.liftId;
@@ -139,7 +137,7 @@ app.get("/player", async function (req, res) {
   var results = null;
   var game = getGameByRoomUuid(roomUuid);
   if (game != null) {
-    console.log("found game", game);
+    //console.log("found game", game);
 
     if (game.player1LiftId == liftId) {
       game.player1Gesture = playerGesture;
@@ -159,7 +157,7 @@ app.get("/player", async function (req, res) {
       );
       console.log(roomUuid + " both player played, checking result", results);
 
-      delete games.roomUuid;
+      games.delete(`${roomUuid}`);
     }
   }
   res.send(JSON.stringify(results));
