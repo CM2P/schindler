@@ -25,7 +25,7 @@ const liftId = urlParams.get('liftId')
 // There are many stun servers provided by google and other sites which one could use .
 // You can also setup your own STUn server according to rfc5766.
 const iceServers = {
-  iceServers: [{ url: 'stun:tun.zottel.net:3478' }],
+  iceServers: [{ url: 'stun:stun.l.google.com:19302' }],
 }
 const streamConstraints = { audio: false, video: true }
 const mtcnnForwardParams = {
