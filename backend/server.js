@@ -70,9 +70,9 @@ app.get("/queue", async function (req, res) {
   const liftId = req.query.liftId;
 
   // pairing to another random user in queue but never in the same room
-   const iterator1 = games[Symbol.iterator]();
+  const iterator1 = games[Symbol.iterator]();
 
-   for (const game of iterator1) {
+  for (const game of iterator1) {
     var aGame = game[1]; // first one game[0] is roomUuid
     var roomUuid = game[0];
     // we don't by design assign user from the same liftId in the same game room
@@ -92,13 +92,7 @@ app.get("/queue", async function (req, res) {
     }
   }
 
-  var newGame = await createGame(
-    uuid.v4(),
-    liftId,
-    null,
-    null,
-    null
-  );
+  var newGame = await createGame(uuid.v4(), liftId, null, null, null, 0, 0);
   console.log(
     "found no room with a player1/2 slot empty, create a new game and room",
     newGame
@@ -124,7 +118,6 @@ app.get("/game", async function (req, res) {
   var game = getGameByRoomUuid(roomUuid);
   res.send(JSON.stringify(game));
 });
-
 
 // testing
 // http://localhost:3000/player/?liftId=A&playerGesture=rock&roomUuid=a98416b4-139f-4455-b093-677ef246e216
@@ -157,7 +150,9 @@ app.get("/player", async function (req, res) {
         game.player1LiftId,
         game.player2LiftId,
         game.player1Gesture,
-        game.player2Gesture
+        game.player2Gesture,
+        game.player1Score,
+        game.player2Score
       );
       console.log(roomUuid + " both player played, checking result", results);
 
@@ -172,13 +167,13 @@ function createGame(
   player1LiftId,
   player2LiftId,
   player1Gesture,
-  player2Gesture
+  player2Gesture,
+  player1Score,
+  player2Score
 ) {
   let statusText = null;
   let player1Wins = false;
   let player2Wins = false;
-  var player1Score = 0;
-  var player2Score = 0;
 
   if (
     player1Gesture == player2Gesture &&

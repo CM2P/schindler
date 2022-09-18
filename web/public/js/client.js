@@ -28,25 +28,25 @@ const liftId = urlParams.get('liftId')
 // https://www.metered.ca/tools/openrelay/
 const iceServers = {
   iceServers: [
-      {
-        urls: "stun:openrelay.metered.ca:80",
-      },
-      {
-        urls: "turn:openrelay.metered.ca:80",
-        username: "openrelayproject",
-        credential: "openrelayproject",
-      },
-      {
-        urls: "turn:openrelay.metered.ca:443",
-        username: "openrelayproject",
-        credential: "openrelayproject",
-      },
-      {
-        urls: "turn:openrelay.metered.ca:443?transport=tcp",
-        username: "openrelayproject",
-        credential: "openrelayproject",
-      },
-    ],
+    {
+      urls: 'stun:openrelay.metered.ca:80',
+    },
+    {
+      urls: 'turn:openrelay.metered.ca:80',
+      username: 'openrelayproject',
+      credential: 'openrelayproject',
+    },
+    {
+      urls: 'turn:openrelay.metered.ca:443',
+      username: 'openrelayproject',
+      credential: 'openrelayproject',
+    },
+    {
+      urls: 'turn:openrelay.metered.ca:443?transport=tcp',
+      username: 'openrelayproject',
+      credential: 'openrelayproject',
+    },
+  ],
 }
 const streamConstraints = { audio: false, video: true }
 const mtcnnForwardParams = {
@@ -87,9 +87,9 @@ async function getRoomUuid(liftId) {
   }
 }
 
-async function play(liftId, roomUuid, playerGesture) {
+async function play(liftId, _roomUuid, playerGesture) {
   const result = await fetch(
-    `${apiUrl}/player?liftId=${liftId}&roomUuid=${roomUuid}&playerGesture=${playerGesture}`
+    `${apiUrl}/player?liftId=${liftId}&roomUuid=${_roomUuid}&playerGesture=${playerGesture}`
   )
   if (result.ok) {
     return result.text()
