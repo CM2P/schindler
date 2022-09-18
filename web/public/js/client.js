@@ -185,8 +185,8 @@ socket.on('ready', function () {
     rtcPeerConnection.onicecandidate = onIceCandidate
 
     // Listen for connectionstatechange on the local RTCPeerConnection
-    peerConnection.addEventListener('connectionstatechange', event => {
-        if (peerConnection.connectionState === 'connected') {
+    rtcPeerConnection.addEventListener('connectionstatechange', event => {
+        if (rtcPeerConnection.connectionState === 'connected') {
             console.log("Peers connected!");
         }
     });
