@@ -134,9 +134,9 @@ async function checkResult(playerGesture) {
   UI.showRemoteHand(true)
   UI.setRemoteGesture(remoteGesture)
 
-  console.log(game.player1Score)
-  UI.setPlayerScore(game.player1Score)
-  UI.setRemoteScore(game.player2Score)
+  if (game.player1Score != null) UI.setPlayerScore(game.player1Score)
+
+  if (game.player2Score != null) UI.setRemoteScore(game.player2Score)
 
   // wait for 3 seconds, then start next round
   setTimeout(playOneRound, 3000)

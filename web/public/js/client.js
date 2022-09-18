@@ -92,7 +92,7 @@ async function play(liftId, _roomUuid, playerGesture) {
     `${apiUrl}/player?liftId=${liftId}&roomUuid=${_roomUuid}&playerGesture=${playerGesture}`
   )
   if (result.ok) {
-    return result.text()
+    return result.json()
   } else {
     alert(result.body)
   }

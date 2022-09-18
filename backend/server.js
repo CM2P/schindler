@@ -133,19 +133,20 @@ app.get("/player", async function (req, res) {
 
   var results = null;
   var game = getGameByRoomUuid(roomUuid);
+  console.log("found game", game);
   if (game != null) {
-    //console.log("found game", game);
-
     if (game.player1LiftId == liftId) {
       game.player1Gesture = playerGesture;
+      games.set(roomUuid, game);
       console.log("was player 1 playing " + playerGesture + " in game", game);
     } else {
       game.player2Gesture = playerGesture;
+      games.set(roomUuid, game);
       console.log("was player 2 playing " + playerGesture + " in game", game);
     }
 
     if (game.player1Gesture != null && game.player2Gesture != null) {
-      var results = createGame(
+      game = createGame(
         roomUuid,
         game.player1LiftId,
         game.player2LiftId,
@@ -154,12 +155,15 @@ app.get("/player", async function (req, res) {
         game.player1Score,
         game.player2Score
       );
-      console.log(roomUuid + " both player played, checking result", results);
+      games.set(roomUuid, game);
+      console.log(roomUuid + " both player played, checking result", game);
 
-      games.delete(`${roomUuid}`);
+      // TODO Winner/Loser
+      // games.delete(`${roomUuid}`);
     }
+    const s = JSON.stringify(game);
+    res.send(s);
   }
-  res.send(JSON.stringify(results));
 });
 
 function createGame(
@@ -212,12 +216,15 @@ function createGame(
   }
 
   if (player1Wins) {
-    player1Score++;
+    player1Score += 1;
     statusText += " - You win!";
   } else if (player2Wins) {
-    player2Score++;
+    player2Score += 1;
     statusText += " - The other wins!";
   }
+
+  player1Gesture = null;
+  player2Gesture = null;
 
   return {
     roomUuid,
