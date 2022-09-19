@@ -68,7 +68,8 @@ async function getFace(localVideo, options) {
   results = await faceapi.mtcnn(localVideo, options)
 }
 
-const hostname = window.location.hostname.replace('dev', 'backend').replace('prod', 'backend')
+var hostname = window.location.hostname
+hostname = hostname === 'localhost' ? hostname : `backend.${hostname}`
 const port = window.location.hostname === 'localhost' ? ':3000' : ''
 
 const apiUrl = `${window.location.protocol}//${hostname}${port}`
