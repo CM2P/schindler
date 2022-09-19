@@ -20,7 +20,7 @@ var roomUuid = null
 
 // setup & initialization
 async function onInit() {
-  roomUuid = await getRoomUuid(liftId)
+  roomUuid = await getRoomUuid()
 
   UI.init()
 
@@ -118,7 +118,7 @@ function detectPlayerGesture(requiredDuration) {
 }
 
 async function checkResult(playerGesture) {
-  var game = await play(liftId, roomUuid, playerGesture)
+  var game = await play(roomUuid, playerGesture)
   var playerGesture
   var remoteGesture
 

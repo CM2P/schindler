@@ -11,7 +11,8 @@ var isCaller
 
 // setup queue
 const urlParams = new URLSearchParams(window.location.search)
-const liftId = urlParams.get('liftId')
+var liftId = urlParams.get('liftId')
+liftId = liftId ? liftId : crypto.randomUUID()
 
 // STUN servers are used by both clients to determine their IP
 // address as visible by the global Internet.If both the peers
@@ -75,7 +76,7 @@ const apiUrl = `${window.location.protocol}//${hostname}${port}`
 // Let's do this
 var socket = io(apiUrl)
 
-async function getRoomUuid(liftId) {
+async function getRoomUuid() {
   const result = await fetch(`${apiUrl}/queue?liftId=${liftId}`)
   if (result.ok) {
     roomUuid = await result.text()
@@ -87,7 +88,7 @@ async function getRoomUuid(liftId) {
   }
 }
 
-async function play(liftId, _roomUuid, playerGesture) {
+async function play(_roomUuid, playerGesture) {
   const result = await fetch(
     `${apiUrl}/player?liftId=${liftId}&roomUuid=${_roomUuid}&playerGesture=${playerGesture}`
   )
