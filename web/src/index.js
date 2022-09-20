@@ -119,24 +119,29 @@ function detectPlayerGesture(requiredDuration) {
 
 async function checkResult(playerGesture) {
   var game = await play(roomUuid, playerGesture)
+  var playerScore
+  var remoteScore
   var playerGesture
   var remoteGesture
 
   if (liftId === game.player1LiftId) {
     playerGesture = game.player1Gesture
+    playerScore = game.player1Score
     remoteGesture = game.player2Gesture
+    remoteScore = game.player2Score
   } else {
     playerGesture = game.player2Gesture
+    playerScore = game.player2Score
     remoteGesture = game.player1Gesture
+    remoteScore = game.player1Score
   }
 
   UI.setPlayerGesture(playerGesture)
   UI.showRemoteHand(true)
   UI.setRemoteGesture(remoteGesture)
 
-  if (game.player1Score != null) UI.setPlayerScore(game.player1Score)
-
-  if (game.player2Score != null) UI.setRemoteScore(game.player2Score)
+  UI.setPlayerScore(playerScore)
+  UI.setRemoteScore(remoteScore)
 
   // wait for 3 seconds, then start next round
   setTimeout(playOneRound, 3000)
